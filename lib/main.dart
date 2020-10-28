@@ -40,7 +40,7 @@ class _InitialState extends State<Initial> {
   final pages = [
     SearchPage(),
     Home(),
-    ProfilePage(),
+    Profile(),
   ];
 
   int currentPage = 1;
