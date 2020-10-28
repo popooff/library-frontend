@@ -95,8 +95,7 @@ class BookDescription extends StatelessWidget {
 
           if (book.quantity > 0 /* && non presente nell'array */) {
             ReservationApi().addReservation(ReservationApi().getUserId(), book.id);
-            // TODO trovare il modo di fixare sta cosa
-            Navigator.popAndPushNamed(context, '/initial');
+            Navigator.pushNamedAndRemoveUntil(context, '/initial', (route) => false);
 
           } else {
             showDialog(
