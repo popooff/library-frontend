@@ -38,7 +38,7 @@ class Initial extends StatefulWidget {
 class _InitialState extends State<Initial> {
 
   final pages = [
-    SearchPage(),
+    Search(),
     Home(),
     Profile(),
   ];

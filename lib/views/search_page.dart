@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 
 
-class SearchPage extends StatefulWidget {
+class Search extends StatefulWidget {
 
   @override
-  _SearchPageState createState() => _SearchPageState();
+  _SearchState createState() => _SearchState();
 }
 
-class _SearchPageState extends State<SearchPage> {
+class _SearchState extends State<Search> {
 
   @override
   Widget build(BuildContext context) {
