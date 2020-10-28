@@ -14,7 +14,15 @@ class UserApi extends Utils {
         body: user.loginJson()
     );
 
-    setUserId(jsonDecode(response.body)['data'][0]['ID']);
+    var jsonResponse = jsonDecode(response.body);
+
+    if (jsonResponse['data'] is List) {
+      setUserId(jsonDecode(response.body)['data'][0]['ID']);
+
+    } else {
+      setUserId(jsonDecode(response.body)['data']['ID']);
+    }
+
     return (response.statusCode == 200) ? true : false;
   }
 
