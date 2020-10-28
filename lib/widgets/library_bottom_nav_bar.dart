@@ -33,7 +33,7 @@ class LibraryBottomBar extends StatelessWidget {
 
           shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(borderRadius),
-              side: BorderSide(color: Colors.black)
+              side: BorderSide(color: Colors.black38)
           ),
 
           child: Row(
