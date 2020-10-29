@@ -45,23 +45,31 @@ class _ReturnedPageState extends State<ReturnedPage> {
 
                     return Card(
                       shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(5),
+                        borderRadius: BorderRadius.circular(15),
                         side: BorderSide(color: Colors.black38)
                       ),
                       child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.end,
                         children: [
                           ListTile(
-                            title: Text(data.data[index].title),
-                            subtitle: Text(data.data[index].author.toString()),
+                            title: Text('${data.data[index].title}'),
+                            subtitle: Text('${data.data[index].author.toString()}'),
                             leading: Icon(Icons.book_outlined),
                           ),
 
-                          FlatButton(
+                          Padding(
+                              padding: EdgeInsets.only(right: 5),
+                            child: FlatButton(
                               onPressed: () async {
                                 reservationApi.addReturned(bookApi.getUserId(), data.data[index].id);
                                 Navigator.of(context).pop();
                               },
                               child: Icon(Icons.check),
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10),
+                                  side: BorderSide(color: Colors.black)
+                              ),
+                            ),
                           )
                         ],
                       ),
