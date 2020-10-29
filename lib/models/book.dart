@@ -4,7 +4,7 @@ class Book {
   int id;
   String title;
   String kind;
-  String author;
+  List<String> author;
   String plot;
   String cover;
   int quantity;
@@ -24,6 +24,7 @@ class Book {
     return Book(
       id: json['ID'],
       title: json['Titolo'],
+      author: json['Autori'].toString().split(',').toList(),
       kind: json['Genere'],
       plot: json['Trama'],
       cover: json['Copertina'],
