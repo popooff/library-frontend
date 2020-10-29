@@ -26,14 +26,13 @@ class _SearchState extends State<Search> {
   Widget build(BuildContext context) {
     return SafeArea(
         child: Padding(
-          padding: EdgeInsets.only(left: 20, right: 20, top: 15),
-          child: Column(
+            padding: EdgeInsets.only(left: 20, right: 20, top: 15),
+            child: Column(
               children: [
 
                 Container(
                   height: 45,
                   child: TextField(
-                    //controller: searching,
                     decoration: InputDecoration(
                         icon: Icon(Icons.search),
                         labelText: 'Search',
@@ -44,41 +43,43 @@ class _SearchState extends State<Search> {
                       List<Book> _books = await bookApi.getBooks();
 
                       setState(() {
-                        books = _books
-                            .where((element) =>
-                        element.title.toLowerCase().contains(value.toLowerCase())).toList();
-                        /*|| element.author.toLowerCase().contains(value.toLowerCase()))*/
-
+                        books = _books.where(
+                                (element) =>
+                                  (
+                                    element.title.toLowerCase().contains(value.toLowerCase())
+                                    /*|| element.author.toLowerCase().contains(value.toLowerCase()))*/
+                                  )
+                        ).toList();
                       });
 
-                    },
+                      },
                   ),
                 ),
-
 
                 SizedBox(height: 10),
 
                 Expanded(
-                    child: ListView.builder(
-                        itemCount: books.length,
-                        itemBuilder: (context, index) {
+                  child: ListView.builder(
+                      itemCount: books.length,
+                      itemBuilder: (context, index) {
 
-                          return Card(
-                            color: Colors.blueGrey,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                            child: ListTile(
-                              title: Text('${books[index].title}'),
-                              subtitle: Text('${books[index].author}'),
-                              leading: Image.network('${bookApi.urlServer}/download/${books[index].cover}'),
-                            ),
-                          );
-                        }),
+                        return Card(
+                          color: Colors.blueGrey,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+
+                          child: ListTile(
+                            title: Text('${books[index].title}'),
+                            subtitle: Text('${books[index].author}'),
+                            leading: Image.network('${bookApi.urlServer}/download/${books[index].cover}'),
+                          ),
+                        );
+                      }),
                 )
-              ],
-            )
-          )
+              ])
+        )
     );
   }
+
 }
