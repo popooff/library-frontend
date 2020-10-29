@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:library_frontend/main.dart';
 import 'package:library_frontend/views/authentication/login_page.dart';
+import 'package:library_frontend/views/returned_page.dart';
 
 
 class Routes {
@@ -22,7 +23,7 @@ class Routes {
         break;
 
       case '/return':
-        return MaterialPageRoute(builder: (_) => null);
+        return MaterialPageRoute(builder: (_) => ReturnedPage());
         break;
 
       default:
