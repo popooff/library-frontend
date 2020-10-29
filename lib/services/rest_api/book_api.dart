@@ -39,7 +39,7 @@ class BookApi extends Utils {
   Future<List<Book>> getUserToBeReturnedBooks(Future<int> userId) async {
     idUser = await userId;
     var response = await http.get(
-        '$urlServer/prenotazioni/daRestituire/$idUser',
+        '$urlServer/prenotazioni/libriUtente/$idUser',
         headers: header
     );
 
