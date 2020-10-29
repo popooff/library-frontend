@@ -7,7 +7,7 @@ import '../services/rest_api/reservation_api.dart';
 class BookDescription extends StatelessWidget {
 
   final Book book;
-  // TODO aggiungere un array con tutti i libri prenotati.
+
 
   BookDescription({
     @required this.book,
@@ -93,7 +93,7 @@ class BookDescription extends StatelessWidget {
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () {
 
-          if (book.quantity > 0 /* && non presente nell'array */) {
+          if (book.quantity > 0) {
             ReservationApi().addReservation(ReservationApi().getUserId(), book.id);
             Navigator.pushNamedAndRemoveUntil(context, '/initial', (route) => false);
 
@@ -102,7 +102,7 @@ class BookDescription extends StatelessWidget {
                 context: context,
                 builder: (_) => AlertDialog(
                     title: Text("Info"),
-                    content: Text("Libro già prenotato o quantità esaurita!"),
+                    content: Text("Quantità esaurita!"),
                     actions: [
                       FlatButton.icon(
                         onPressed: () {

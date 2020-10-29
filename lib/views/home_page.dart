@@ -25,8 +25,6 @@ class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
 
-    // La get viene richiamata ogni volta che si cambia pagina e si ritorna nella home.
-    // TODO la quantita non cambia quando nel momento in cui prenoto un libro e rimango nella stessa pagina
     return Container(
       color: Colors.white,
 
