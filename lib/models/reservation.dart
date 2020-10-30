@@ -3,19 +3,28 @@ class Reservation {
 
   final int idUser;
   final int idBook;
+  final int idReservation;
   final DateTime dateReservation;
+  final DateTime dateReturned;
 
-  Reservation(
+  Reservation({
     this.idUser,
     this.idBook,
-    this.dateReservation
-  );
+    this.idReservation,
+    this.dateReservation,
+    this.dateReturned
+  });
 
 
-  Map<String, dynamic> toJson() => {
+  Map<String, dynamic> bookedJson() => {
     'utente': idUser,
     'libro': idBook,
-    'dataPrenotazione': dateReservation
+    'dataPrenotazione': dateReservation.toString()
+  };
+
+  Map<String, dynamic> returnedJson() => {
+    'idPrenotazione': idReservation,
+    'dataRestituzione': dateReturned.toString()
   };
 
 }
