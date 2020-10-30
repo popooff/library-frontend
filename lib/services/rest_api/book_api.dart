@@ -49,4 +49,14 @@ class BookApi extends Utils {
         .toList();
   }
 
+
+  Future<Book> getBookById(int id) async {
+    var response = await http.get(
+        '$urlServer/libri/getBook/$id',
+        headers: header
+    );
+
+    return Book.fromJson(jsonDecode(response.body)['data'][0][0]);
+  }
+
 }
