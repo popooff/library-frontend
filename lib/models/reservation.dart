@@ -21,13 +21,13 @@ class Reservation {
 
 
   Map<String, dynamic> bookedJson() => {
-    'utente': idUser,
-    'libro': idBook,
+    'utente': '$idUser',
+    'libro': '$idBook',
     'dataPrenotazione': dateReservation.toString()
   };
 
   Map<String, dynamic> returnedJson() => {
-    'idPrenotazione': idReservation,
+    'idPrenotazione': '$idReservation',
     'dataRestituzione': dateReturned.toString()
   };
 
