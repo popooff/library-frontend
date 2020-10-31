@@ -7,10 +7,10 @@ import 'book_api.dart';
 
 class ReservationApi extends Utils {
 
-  int idUser;
-  Reservation reservation;
   List<Reservation> list = [];
-  BookApi bookApi;
+  BookApi bookApi = BookApi();
+  Reservation reservation;
+  int idUser;
 
 
   Future<bool> addReservation(Future<int> userId, int idBook) async {
@@ -31,7 +31,7 @@ class ReservationApi extends Utils {
   }
 
 
-  Future<bool> addReturned(int idReservation, int idBook) async {
+  Future<bool> returnBook(int idReservation) async {
     reservation = Reservation(
         idReservation: idReservation,
         dateReturned: DateTime.parse(DateTime.now().toString().split(' ')[0])
@@ -47,7 +47,7 @@ class ReservationApi extends Utils {
   }
 
 
-  Future<List<Reservation>> getUserReservation(Future<int> userId) async {
+  Future<List<Reservation>> getAllBooksReservation(Future<int> userId) async {
     idUser = await userId;
     var response = await http.get(
         '$urlServer/prenotazioni/libriUtente/$idUser',
@@ -58,32 +58,27 @@ class ReservationApi extends Utils {
   }
 
 
-  Future<List<Reservation>> getUserToBeReturned(Future<int> userId) async {
+  Future<List<Reservation>> getBooksToBeReturned(Future<int> userId) async {
     idUser = await userId;
     var response = await http.get(
         '$urlServer/prenotazioni/daRestituire/$idUser',
         headers: header
     );
 
-    var responseList = jsonDecode(response.body)['data'][0];
+    for (var el in jsonDecode(response.body)['data'][0]) {
 
-    for (var el in responseList) {
+      var book = await bookApi.getBookById(el['Libro']);
+
       list.add(
         Reservation(
-          idBook: el['Libro'],
+          book: book,
           idReservation: el['ID'],
           dateReservation: DateTime.parse(el['DataPrenotazione'].toString().substring(0, 10))
         )
       );
     }
 
-    for (var el in list) {
-      print(el.idBook);
-    }
-
-    return null;
+    return list;
   }
-// {"Libro":36,"DataPrenotazione":"2020-10-26T00:00:00.000Z","ID":24}
-//   Id libro                                                 Id prenotazione
 
 }
