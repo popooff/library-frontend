@@ -1,9 +1,12 @@
+import 'book.dart';
+
 
 class Reservation {
 
   final int idUser;
   final int idBook;
   final int idReservation;
+  final Book book;
   final DateTime dateReservation;
   final DateTime dateReturned;
 
@@ -11,6 +14,7 @@ class Reservation {
     this.idUser,
     this.idBook,
     this.idReservation,
+    this.book,
     this.dateReservation,
     this.dateReturned
   });
