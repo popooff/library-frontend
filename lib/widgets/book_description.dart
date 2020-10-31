@@ -91,11 +91,14 @@ class BookDescription extends StatelessWidget {
       ),
 
       floatingActionButton: FloatingActionButton.extended(
-        onPressed: () {
+        onPressed: () async {
 
           if (book.quantity > 0) {
-            ReservationApi().addReservation(ReservationApi().getUserId(), book.id);
-            Navigator.pushNamedAndRemoveUntil(context, '/initial', (route) => false);
+            bool reserved = await ReservationApi().addReservation(ReservationApi().getUserId(), book.id);
+
+            if (reserved) {
+              Navigator.pushNamedAndRemoveUntil(context, '/initial', (route) => false);
+            }
 
           } else {
             showDialog(
