@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:library_frontend/main.dart';
 import 'package:library_frontend/views/authentication/login_page.dart';
+import 'package:library_frontend/views/booked_page.dart';
 import 'package:library_frontend/views/returned_page.dart';
 
 
@@ -19,7 +20,7 @@ class Routes {
         break;
 
       case '/reservation':
-        return MaterialPageRoute(builder: (_) => null);
+        return MaterialPageRoute(builder: (_) => BookedPage());
         break;
 
       case '/return':
