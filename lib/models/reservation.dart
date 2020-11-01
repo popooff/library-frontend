@@ -27,7 +27,7 @@ class Reservation {
   };
 
   Map<String, dynamic> returnedJson() => {
-    'idPrenotazione': '$idReservation',
+    'prenotazione': '$idReservation',
     'dataRestituzione': dateReturned.toString()
   };
 
