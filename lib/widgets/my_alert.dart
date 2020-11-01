@@ -3,12 +3,14 @@ import 'package:flutter/material.dart';
 
 class MyAlertDialog extends StatelessWidget {
 
+  final BuildContext parent;
   final String title;
   final String content;
 
   MyAlertDialog({
-    this.title,
-    this.content
+    this.parent,
+    this.title = 'Info',
+    @required this.content
   });
 
 
@@ -16,24 +18,33 @@ class MyAlertDialog extends StatelessWidget {
   Widget build(BuildContext context) {
     return AlertDialog(
         title: Text(title),
-        content: Text(content),
+        content: Text(content, style: TextStyle(color: Colors.black38)),
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(10),
-          side: BorderSide(color: Colors.black38)
+            borderRadius: BorderRadius.circular(10),
+            side: BorderSide(color: Colors.black38)
         ),
         actions: [
-
           FlatButton.icon(
             onPressed: () {
-              Navigator.of(context).pop();
-              },
-            label: Text(
-              'Ok',
-              style: TextStyle(color: Colors.black38),
+
+              if (parent == null) {
+                Navigator.of(context).pop();
+              } else {
+                Navigator.of(context).pop();
+                Navigator.pop(parent);
+              }
+            },
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10),
+                side: BorderSide(color: Colors.black38)
             ),
-            icon: Icon(Icons.close),
+            label: Text(
+              'Close',
+              style: TextStyle(color: Colors.black45),
+            ),
+            icon: Icon(Icons.close, color: Colors.black45,),
           )
-        ]
-    );
+        ]);
+
   }
 }
