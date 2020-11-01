@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:library_frontend/widgets/my_alert.dart';
 import 'package:meta/meta.dart';
 import '../models/book.dart';
 import '../services/rest_api/reservation_api.dart';
 
 
+// TODO farlo statefull prossimamente e metterlo nella cartella view,
+// TODO dato che dovra essere chiamata anche nella ricerca di un libro.
 class BookDescription extends StatelessWidget {
 
   final Book book;
@@ -98,26 +101,22 @@ class BookDescription extends StatelessWidget {
 
             if (reserved) {
               Navigator.pushNamedAndRemoveUntil(context, '/initial', (route) => false);
+
+            } else {
+              showDialog(
+                  context: context,
+                  builder: (_) => MyAlertDialog(
+                    parent: context,
+                    content: 'Errore, prenotazione non effettuata!',
+                  )
+              );
             }
 
           } else {
             showDialog(
                 context: context,
-                builder: (_) => AlertDialog(
-                    title: Text("Info"),
-                    content: Text("Quantità esaurita!"),
-                    actions: [
-                      FlatButton.icon(
-                        onPressed: () {
-                          Navigator.of(context).pop();
-                        },
-                        label: Text(
-                          'Ok',
-                          style: TextStyle(color: Colors.black38),
-                        ),
-                        icon: Icon(Icons.close),
-                      )
-                    ]
+                builder: (_) => MyAlertDialog(
+                  content: 'Quantita esaurita!',
                 )
             );
           }
