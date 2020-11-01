@@ -54,7 +54,20 @@ class ReservationApi extends Utils {
         headers: header
     );
 
-    return null;
+    for (var el in jsonDecode(response.body)['data'][0]) {
+
+      var book = await bookApi.getBookById(el['Libro']);
+
+      list.add(
+          Reservation(
+              book: book,
+              idReservation: el['ID'],
+              dateReservation: DateTime.parse(el['DataPrenotazione'].toString().substring(0, 10))
+          )
+      );
+    }
+
+    return list;
   }
 
 
