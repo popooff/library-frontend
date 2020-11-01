@@ -56,13 +56,11 @@ class ReservationApi extends Utils {
 
     for (var el in jsonDecode(response.body)['data'][0]) {
 
-      var book = await bookApi.getBookById(el['Libro']);
+      var book = await bookApi.getBookById(el['ID']);
 
       list.add(
           Reservation(
               book: book,
-              idReservation: el['ID'],
-              dateReservation: DateTime.parse(el['DataPrenotazione'].toString().substring(0, 10))
           )
       );
     }
