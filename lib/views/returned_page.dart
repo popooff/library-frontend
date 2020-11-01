@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:library_frontend/models/reservation.dart';
 import 'package:library_frontend/services/rest_api/reservation_api.dart';
+import 'package:library_frontend/widgets/my_alert.dart';
 
 
 class ReturnedPage extends StatefulWidget {
@@ -26,7 +27,7 @@ class _ReturnedPageState extends State<ReturnedPage> {
     return Scaffold(
       body: SafeArea(
         child: FutureBuilder(
-          future: reservationApi.getUserToBeReturned(reservationApi.getUserId()),
+          future: reservationApi.getBooksToBeReturned(reservationApi.getUserId()),
           builder: (context, AsyncSnapshot<List<Reservation>> data) {
 
             if (data.data == null || data == null) {
@@ -54,11 +55,22 @@ class _ReturnedPageState extends State<ReturnedPage> {
                           ),
 
                           Padding(
-                              padding: EdgeInsets.only(right: 5),
+                            padding: EdgeInsets.only(right: 5),
                             child: FlatButton(
                               onPressed: () async {
-                                reservationApi.addReturned(data.data[index].idReservation, data.data[index].book.id);
-                                Navigator.of(context).pop();
+                                bool returned = await reservationApi.returnBook(data.data[index].idReservation);
+
+                                if (returned) {
+                                  Navigator.popAndPushNamed(context, '/return');
+
+                                } else {
+                                  showDialog(
+                                      context: context,
+                                      builder: (_) => MyAlertDialog(
+                                          content: 'Problemi nella restituzione del libro!'
+                                      )
+                                  );
+                                }
                               },
                               child: Icon(Icons.check),
                               shape: RoundedRectangleBorder(
