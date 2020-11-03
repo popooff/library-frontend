@@ -4,6 +4,7 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:library_frontend/models/chart.dart';
 import 'package:library_frontend/services/rest_api/chart_api.dart';
 import 'package:library_frontend/widgets/chart_text_indicator.dart';
+import 'dart:math';
 
 
 class Profile extends StatefulWidget {
@@ -215,6 +216,8 @@ class _LineChartSample2State extends State<LineChartSample2> {
                         child: CircularProgressIndicator(),
                       );
                     } else {
+                      int maxY = data.data.map((e) => e.bookNumber).toList().reduce(max);
+
                       return LineChart(LineChartData(
                         // TODO fa vedere le griglie orizzontali e verticali
                         gridData: FlGridData(
@@ -283,7 +286,6 @@ class _LineChartSample2State extends State<LineChartSample2> {
                             showTitles: true,
                             getTextStyles: (value) => const TextStyle(
                               color: Color(0xff67727d),
-                              //fontWeight: FontWeight.bold,
                               fontSize: 13,
                             ),
                             getTitles: (value) {
@@ -307,10 +309,10 @@ class _LineChartSample2State extends State<LineChartSample2> {
                             show: true,
                             border: Border.all(
                                 color: const Color(0xff37434d), width: 1)),
-                        minX: 0,
-                        maxX: 11,
+                        minX: 1,
+                        maxX: 12,
                         minY: 0,
-                        maxY: 9,
+                        maxY: maxY.toDouble(),
                         lineBarsData: [
                           LineChartBarData(
                             spots: [
