@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:library_frontend/models/book.dart';
 import 'package:library_frontend/services/rest_api/book_api.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
-import 'package:library_frontend/widgets/book_description.dart';
+import 'book_description.dart';
 
 
 class Home extends StatefulWidget {

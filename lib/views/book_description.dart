@@ -1,21 +1,31 @@
 import 'package:flutter/material.dart';
+import 'package:library_frontend/models/book.dart';
+import 'package:library_frontend/services/rest_api/reservation_api.dart';
 import 'package:library_frontend/widgets/my_alert.dart';
-import 'package:meta/meta.dart';
-import '../models/book.dart';
-import '../services/rest_api/reservation_api.dart';
 
 
-// TODO farlo statefull prossimamente e metterlo nella cartella view,
-// TODO dato che dovra essere chiamata anche nella ricerca di un libro.
-class BookDescription extends StatelessWidget {
+class BookDescription extends StatefulWidget {
 
   final Book book;
-
 
   BookDescription({
     @required this.book,
   }) : assert(book != null, 'Il parametro formale \'Book\' non deve essere null');
 
+  @override
+  _BookDescriptionState createState() => _BookDescriptionState();
+}
+
+class _BookDescriptionState extends State<BookDescription> {
+
+  ReservationApi reservationApi;
+
+
+  @override
+  void initState() {
+    reservationApi = ReservationApi();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -34,9 +44,8 @@ class BookDescription extends StatelessWidget {
 
                       Center(
                         child: Text(
-                            'Informazioni',
+                            'Book Info',
                             style: TextStyle(
-                              fontFamily: 'Montserrat',
                               color: Colors.black,
                               fontWeight: FontWeight.bold,
                               letterSpacing: 1,
@@ -48,43 +57,40 @@ class BookDescription extends StatelessWidget {
                       SizedBox(height: 10),
 
                       Text(
-                          'Autore: ${book.author}',
+                          'Autore: ${widget.book.author}',
                           style: TextStyle(
-                            fontFamily: 'Montserrat',
                             color: Colors.grey,
-                            fontSize: 15,
+                            fontSize: 16,
                           )
                       ),
 
                       Text(
-                          'Genere: ${book.kind}',
+                          'Genere: ${widget.book.kind}',
                           style: TextStyle(
-                            fontFamily: 'Montserrat',
                             color: Colors.grey,
-                            fontSize: 15,
+                            fontSize: 16,
                           )
                       ),
 
                       SizedBox(height: 10),
 
                       Text(
-                        'Trama: ${book.plot}',
+                        'Trama: ${widget.book.plot}',
                         textAlign: TextAlign.justify,
                         style: TextStyle(
-                          fontFamily: 'Montserrat',
-                          color: Colors.grey,
-                          fontSize: 15,
+                          color: Colors.black45,
+                          fontSize: 16,
                         ),
                       ),
 
                       SizedBox(height: 20),
 
                       Text(
-                        'Disponibili: ${book.quantity}',
+                        'Disponibili: ${widget.book.quantity}',
                         style: TextStyle(
-                          fontFamily: 'Montserrat',
-                          color: Colors.black38,
-                          fontSize: 16,
+                          color: Colors.black.withOpacity(0.6),
+                          fontWeight: FontWeight.bold,
+                          fontSize: 17,
                         ),
                       ),
                     ]),
@@ -96,11 +102,20 @@ class BookDescription extends StatelessWidget {
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () async {
 
-          if (book.quantity > 0) {
-            bool reserved = await ReservationApi().addReservation(ReservationApi().getUserId(), book.id);
+          if (widget.book.quantity > 0) {
+            bool reserved = await reservationApi.addReservation(
+                reservationApi.getUserId(),
+                widget.book.id
+            );
 
             if (reserved) {
               Navigator.pushNamedAndRemoveUntil(context, '/initial', (route) => false);
+              showDialog(
+                  context: context,
+                  builder: (_) => MyAlertDialog(
+                    content: 'Prenotazione effettuata con successo!',
+                  )
+              );
 
             } else {
               showDialog(
