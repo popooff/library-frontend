@@ -1,20 +1,10 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_login/flutter_login.dart';
+import 'package:library_frontend/services/rest_api/user_api.dart';
+import 'package:library_frontend/widgets/my_alert.dart';
 import '../../models/user.dart';
-import '../../services/rest_api/user_api.dart';
-import 'package:crypt/crypt.dart';
 
 
-// $5$rounds=10000$abcdefghijklmnop$51muKIziT9VAyDZ2ZueAYvAwgIYx0cLxUCIAlPoWaHD
-// 51muKIziT9VAyDZ2ZueAYvAwgIYx0cLxUCIAlPoWaHD
-String sha256Encrypt(String password) {
-  return Crypt.sha256(password, rounds: 12831, salt: 'good_game_man')
-      .toString()
-      .substring(30);
-}
-
-
+// TODO mettere un caricamento nel momento in cui si preme login e si aspetta.
 class LoginPage extends StatefulWidget {
 
   @override
@@ -25,111 +15,133 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
 
   UserApi userApi;
-  User user;
+  bool obscurePassword = true;
+  TextEditingController emailController;
+  TextEditingController passwordController;
 
 
   @override
   void initState() {
     userApi = UserApi();
+    emailController = TextEditingController();
+    passwordController = TextEditingController();
     super.initState();
   }
 
   @override
   void dispose() {
+    emailController.dispose();
+    passwordController.dispose();
     super.dispose();
-  }
-
-
-  Future<String> login(LoginData data) {
-    return Future.delayed(Duration(milliseconds: 1000)).then((_) async {
-      bool logged = await userApi.loginUser(
-          User(
-              email: data.name,
-              password: sha256Encrypt(data.password)
-          )
-      );
-
-      return logged ? null : 'Login fallito!';
-    });
-  }
-
-
-  Future<String> register(LoginData data) {
-    return Future.delayed(Duration(milliseconds: 1000)).then((_) async {
-      user = User(
-          name: '',
-          surname: '',
-          email: data.name,
-          password: sha256Encrypt(data.password)
-      );
-      bool registered = await userApi.registerUser(user);
-
-      return registered ? null : 'Registrazione fallita!';
-    });
   }
 
 
   @override
   Widget build(BuildContext context) {
 
-    return FlutterLogin(
+    return Scaffold(
+        body: SafeArea(
+          child: Container(
+            color: Colors.white,
+            height: MediaQuery.of(context).size.height,
+            width: MediaQuery.of(context).size.width,
 
-      title: 'Library',
-      logo: 'assets/library_logo1.jpg',
-      onLogin: login,
-      onSignup: register,
+            child: Padding(
+              padding: EdgeInsets.only(left: 15, right: 15),
+              child: ListView(
+                children: [
 
-      onSubmitAnimationCompleted: () {
-        Navigator.pushReplacementNamed(context, '/initial');
-      },
+                  Image.asset(
+                    'assets/library_login.png',
+                    height: 280,
+                  ),
 
-      onRecoverPassword: (_) => Future(null),
+                  Container(
+                    height: 40,
+                    child: TextField(
+                      controller: emailController,
+                      decoration: InputDecoration(
+                          labelText: 'Email',
+                          border: OutlineInputBorder()
+                      ),
+                    ),
+                  ),
 
-      messages: LoginMessages(
-        usernameHint: 'E-mail',
-        passwordHint: 'Password',
-        confirmPasswordHint: 'Confirm',
-        loginButton: 'Login',
-        signupButton: 'Register',
-        forgotPasswordButton: 'Forgot password?',
-        recoverPasswordButton: 'Send mail',
-        goBackButton: 'Back',
-        confirmPasswordError: 'Le password non coincidono!',
-        recoverPasswordDescription: 'Funzione non disponibile',
-      ),
+                  SizedBox(
+                    height: 5,
+                  ),
 
-      theme: LoginTheme(
-        primaryColor: Colors.white,
-        accentColor: Colors.black,
-        titleStyle: TextStyle(
-          color: Colors.blue[300],
-          letterSpacing: 1,
-        ),
+                  Container(
+                    height: 40,
+                    child: TextField(
+                      obscureText: obscurePassword,
+                      controller: passwordController,
+                      decoration: InputDecoration(
+                          labelText: 'Password',
+                          border: OutlineInputBorder(),
+                          suffixIcon: IconButton(
+                            onPressed: () {
+                              setState(() {
+                                obscurePassword ? obscurePassword = false : obscurePassword = true;
+                              });
+                            },
+                            icon: (obscurePassword) ? Icon(Icons.visibility_off) : Icon(Icons.visibility),
+                          )
+                      ),
+                    ),
+                  ),
 
-        cardTheme: CardTheme(
-          color: Colors.blue[500],
-          elevation: 5,
-          shape: ContinuousRectangleBorder(
-              borderRadius: BorderRadius.circular(30.0)),
-        ),
+                  SizedBox(
+                    height: 5,
+                  ),
 
-        inputTheme: InputDecorationTheme(
-          filled: true,
-          fillColor: Colors.blue,
-          errorStyle: TextStyle(
-              color: Colors.white,
-              decorationColor: Colors.blue
+                  FlatButton(
+                    onPressed: () async {
+
+                      bool logged = await userApi.loginUser(
+                          User(
+                              email: emailController.text,
+                              password: userApi.sha256Encrypt(passwordController.text)
+                          )
+                      );
+
+                      if (logged) {
+                        Navigator.pushReplacementNamed(context, '/initial');
+
+                      } else {
+                        showDialog(
+                            context: context,
+                            builder: (_) => MyAlertDialog(
+                                content: 'Login non riuscito!'
+                            )
+                        );
+                      }
+
+                    },
+                    child: Text('Login'),
+                    textColor: Colors.white,
+                    color: Colors.blue.shade300,
+                  ),
+
+                  Center(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text('Non hai un account?'),
+                        FlatButton(
+                            onPressed: () {
+                              Navigator.pushReplacementNamed(context, '/register');
+                            },
+                            child: Text('Registrati')
+                        )
+                      ],
+                    )
+                  )
+                ],
+              ),
+            ),
           ),
-        ),
-
-        buttonTheme: LoginButtonTheme(
-          backgroundColor: Colors.black,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(15),
-          ),
-        ),
-      ),
+        )
     );
-
   }
 }
