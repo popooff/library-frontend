@@ -18,10 +18,18 @@ class UserApi extends Utils {
     var jsonResponse = jsonDecode(response.body);
 
     if (jsonResponse['data'] is List) {
-      setUserId(jsonDecode(response.body)['data'][0]['ID']);
+      var id = jsonResponse['data'][0]['ID'];
+      var name = jsonResponse['data'][0]['Nome'];
+      var surname = jsonResponse['data'][0]['Cognome'];
+      var email = jsonResponse['data'][0]['Email'];
+      setCredential(id, name, surname, email);
 
     } else {
-      setUserId(jsonDecode(response.body)['data']['ID']);
+      var id = jsonResponse['data']['ID'];
+      var name = jsonResponse['data']['Nome'];
+      var surname = jsonResponse['data']['Cognome'];
+      var email = jsonResponse['data']['Email'];
+      setCredential(id, name, surname, email);
     }
 
     return (response.statusCode == 200) ? true : false;
@@ -37,6 +45,12 @@ class UserApi extends Utils {
     );
 
     return (response.statusCode == 201) ? true : false;
+  }
+
+
+  void setCredential(int id, String name, String surname, String email) {
+    setUserId(id);
+    setUser(name, surname, email);
   }
 
 
