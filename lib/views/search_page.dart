@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:library_frontend/models/book.dart';
 import 'package:library_frontend/services/rest_api/book_api.dart';
+import 'package:library_frontend/views/book_description.dart';
 
 
+// TODO aggiunge ingrandimento della copertina al tap di essa.
 class Search extends StatefulWidget {
 
   @override
@@ -11,10 +13,17 @@ class Search extends StatefulWidget {
 
 class _SearchState extends State<Search> {
 
-  var searching = TextEditingController();
-  var bookApi = BookApi();
-  List<Book> books = [];
+  var searching;
+  BookApi bookApi;
+  List<Book> books;
 
+
+  @override
+  void initState() {
+    searching = TextEditingController();
+    bookApi = BookApi();
+    super.initState();
+  }
 
   @override
   void dispose() {
@@ -24,55 +33,56 @@ class _SearchState extends State<Search> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
+    return Container(
         child: Padding(
-            padding: EdgeInsets.only(left: 20, right: 20, top: 15),
+            padding: EdgeInsets.only(left: 15, right: 15, top: 30),
             child: Column(
               children: [
 
                 Container(
-                  height: 45,
+                  height: 40,
                   child: TextField(
                     decoration: InputDecoration(
-                        icon: Icon(Icons.search),
                         labelText: 'Search',
-                        border: OutlineInputBorder()
+                        border: OutlineInputBorder(),
+                        suffixIcon: Icon(Icons.search)
                     ),
-
-                    onSubmitted: (value) async {
-                      List<Book> _books = await bookApi.getBooks();
-
+                    onTap: () async {
+                      books = await bookApi.getBooks();
+                    },
+                    onSubmitted: (value) {
                       setState(() {
-                        books = _books.where(
-                                (element) =>
-                                  (
-                                    element.title.toLowerCase().contains(value.toLowerCase())
-                                    /*|| element.author.toLowerCase().contains(value.toLowerCase()))*/
-                                  )
+                        books = books.where((element) =>
+                          (element.title.toLowerCase().contains(value.toLowerCase())
+                              || element.author.toString().toLowerCase().contains(value.toLowerCase()))
                         ).toList();
                       });
-
-                      },
+                    },
                   ),
                 ),
 
-                SizedBox(height: 10),
-
                 Expanded(
                   child: ListView.builder(
-                      itemCount: books.length,
+                      physics: BouncingScrollPhysics(),
+                      itemCount: books == null ? 0 : books.length,
                       itemBuilder: (context, index) {
 
                         return Card(
-                          color: Colors.blueGrey,
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(10),
+                            side: BorderSide(color: Colors.black.withOpacity(0.3))
                           ),
 
                           child: ListTile(
                             title: Text('${books[index].title}'),
                             subtitle: Text('${books[index].author}'),
                             leading: Image.network('${bookApi.urlServer}/download/${books[index].cover}'),
+                            onTap: () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(builder: (_) => BookDescription(book: books[index]))
+                              );
+                            },
                           ),
                         );
                       }),
