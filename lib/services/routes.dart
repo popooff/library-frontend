@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:library_frontend/main.dart';
 import 'package:library_frontend/views/authentication/login_page.dart';
+import 'package:library_frontend/views/authentication/registration_page.dart';
 import 'package:library_frontend/views/booked_page.dart';
 import 'package:library_frontend/views/returned_page.dart';
 
@@ -13,6 +14,10 @@ class Routes {
 
       case '/':
         return MaterialPageRoute(builder: (_) => LoginPage());
+        break;
+
+      case '/register':
+        return MaterialPageRoute(builder: (_) => RegisterPage());
         break;
 
       case '/initial':
