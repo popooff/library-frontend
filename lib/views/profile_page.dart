@@ -8,19 +8,107 @@ import 'dart:math';
 
 
 class Profile extends StatefulWidget {
+  
   @override
   _ProfileState createState() => _ProfileState();
 }
 
+// TODO trovare il modo di stampare i dati dell'utente.
 class _ProfileState extends State<Profile> {
-  int touchedIndex;
+
   ChartApi chartApi;
+  List<String> user = ['', '', ''];
 
   @override
   void initState() {
     chartApi = ChartApi();
+    getCredential();
     super.initState();
   }
+
+  void getCredential() async {
+    user = await chartApi.getUser();
+  }
+
+
+  @override
+  Widget build(BuildContext context) {
+    return SafeArea(
+        child: SingleChildScrollView(
+          physics: BouncingScrollPhysics(),
+          child: Column(
+            children: [
+
+              Center(
+                child: Text(
+                  'Dashboard',
+                  style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold
+                  ),
+                ),
+              ),
+
+              Padding(
+                padding: EdgeInsets.only(left: 10, right: 10, top: 10),
+                child: Container(
+                  decoration: BoxDecoration(
+                      color: Colors.white70,
+                      border: Border.all(color: Colors.black38),
+                      borderRadius: BorderRadius.circular(10)
+                  ),
+                  child: DataTable(
+                    columns: [
+                      DataColumn(label: Text('Profile')),
+                    ],
+                    rows: [
+                      DataRow(selected: true, cells: [
+                        DataCell(Text('${user[0].toString()}')),
+                      ]),
+
+                      DataRow(selected: true, cells: [
+                        DataCell(Text('${user[1].toString()}')),
+                      ]),
+
+                      DataRow(selected: true, cells: [
+                        DataCell(Text('${user[2].toString()}')),
+                      ]),
+                    ]),
+                ),
+              ),
+
+              SizedBox(
+                height: 5,
+              ),
+
+              Padding(
+                padding: EdgeInsets.only(left: 6, right: 6),
+                child: CakeKindChart(chartApi)
+              ),
+
+              Padding(
+                padding: EdgeInsets.all(10),
+                child: LineMonthChart(),
+              )
+
+            ]),
+        )
+    );
+  }
+}
+
+
+class CakeKindChart extends StatefulWidget {
+
+  final ChartApi chartApi;
+
+  CakeKindChart(this.chartApi);
+
+  @override
+  _CakeKindChartState createState() => _CakeKindChartState();
+}
+
+class _CakeKindChartState extends State<CakeKindChart> {
 
   final Map<String, Color> kindColor = {
     'Autobografico': Colors.deepPurple,
@@ -37,153 +125,91 @@ class _ProfileState extends State<Profile> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-        child: SingleChildScrollView(
-      child: Column(
-        children: [
-          Center(
-            child: Text(
-              'Dashboard',
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-            ),
-          ),
-          Padding(
-            padding: EdgeInsets.only(left: 10, right: 10, top: 10),
-            child: Container(
-              decoration: BoxDecoration(
-                  color: Colors.black45,
-                  borderRadius: BorderRadius.circular(20)),
-              child: DataTable(
-                columns: [
-                  DataColumn(label: Text('Profile')),
-                ],
-                rows: [
-                  DataRow(selected: true, cells: [
-                    DataCell(
-                      Text('Nome'), /*showEditIcon: true*/
-                    ),
-                  ]),
-                  DataRow(selected: true, cells: [
-                    DataCell(
-                      Text('Cognome'), /*showEditIcon: true*/
-                    ),
-                  ]),
-                  DataRow(selected: true, cells: [
-                    DataCell(
-                      Text('Email'), /*showEditIcon: true*/
-                    ),
-                  ]),
-                ],
-              ),
-            ),
-          ),
-          Padding(
-            padding: EdgeInsets.only(left: 10, right: 10),
-            child: RaisedButton(
-              onPressed: () {},
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(20)),
-              child: Row(children: [
-                Icon(Icons.settings),
-                SizedBox(
-                  width: 10,
-                ),
-                Text('Modifica dati profilo')
-              ]),
-            ),
-          ),
-          Padding(
-            padding: EdgeInsets.only(left: 6, right: 6),
-            child: Container(
-                child: FutureBuilder(
-              future: chartApi.getAllKindUserRead(chartApi.getUserId()),
-              builder: (context, AsyncSnapshot<List<Chart>> data) {
-                if (data.data == null || data == null) {
-                  return Center(
-                    child: CircularProgressIndicator(),
-                  );
-                } else {
-                  var list = data.data ?? [];
-                  return AspectRatio(
-                    aspectRatio: 1.5,
-                    child: Card(
-                      color: Colors.white,
-                      child: Row(
-                        children: [
-                          const SizedBox(
-                            height: 18,
-                          ),
-                          Expanded(
-                            child: AspectRatio(
-                              aspectRatio: 1,
-                              child: PieChart(
-                                PieChartData(
-                                  borderData: FlBorderData(
-                                    show: false,
-                                  ),
-                                  sectionsSpace: 2,
-                                  centerSpaceRadius: 30,
-                                  sections: List.generate(list.length, (i) {
-                                    return PieChartSectionData(
-                                      color: kindColor[list[i].kind],
-                                      value: list[i].bookNumber.toDouble(),
-                                      title: '${list[i].bookNumber}',
-                                      radius: 55,
-                                    );
-                                  }),
-                                ),
+    return Container(
+        child: FutureBuilder(
+          future: widget.chartApi.getAllKindUserRead(widget.chartApi.getUserId()),
+          builder: (context, AsyncSnapshot<List<Chart>> data) {
+            if (data.data == null || data.data.isEmpty) {
+              return Center(
+                child: CircularProgressIndicator(),
+              );
+
+            } else {
+              return AspectRatio(
+                aspectRatio: 1.5,
+                child: Card(
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10),
+                    side: BorderSide(color: Colors.black38)
+                  ),
+                  color: Colors.white,
+                  child: Row(
+                      children: [
+                        const SizedBox(height: 18),
+
+                        Expanded(
+                          child: AspectRatio(
+                            aspectRatio: 1,
+                            child: PieChart(
+                              PieChartData(
+                                borderData: FlBorderData(show: false),
+                                sectionsSpace: 2,
+                                centerSpaceRadius: 30,
+                                sections: List.generate(data.data.length, (i) {
+
+                                  return PieChartSectionData(
+                                    color: kindColor[data.data[i].kind],
+                                    value: data.data[i].bookNumber.toDouble(),
+                                    title: '${data.data[i].bookNumber}',
+                                    radius: 55,
+                                  );
+                                }),
                               ),
                             ),
                           ),
-                          Column(
-                            mainAxisSize: MainAxisSize.max,
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              for (int count = 0;
-                                  count < list.length ?? 0;
-                                  count++)
-                                Padding(
-                                  padding: EdgeInsets.only(top: 1, bottom: 1),
-                                  child: ChartTextIndicator(
-                                    backgroundColor:
-                                        kindColor['${list[count].kind}'],
-                                    text: '${list[count].kind}',
+                        ),
+
+
+                        SingleChildScrollView(
+                          child: Column(
+                              mainAxisSize: MainAxisSize.max,
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+
+                                for (int count = 0; count < data.data.length; count++)
+                                  Padding(
+                                    padding: EdgeInsets.only(
+                                        top: 1,
+                                        bottom: 2
+                                    ),
+                                    child: ChartTextIndicator(
+                                      backgroundColor: kindColor['${data.data[count].kind}'],
+                                      text: '${data.data[count].kind}',
+                                    ),
                                   ),
-                                ),
-                            ],
-                          ),
-                          const SizedBox(
-                            width: 10,
-                          ),
-                        ],
-                      ),
-                    ),
-                  );
-                }
-              },
-            )),
-          ),
-          Padding(
-            padding: EdgeInsets.all(10),
-            child: LineChartSample2(),
-          )
-        ],
-      ),
-    ));
+                              ]),
+                        ),
+
+                        const SizedBox(width: 10),
+                      ]),
+                ),
+              );
+            }
+          },
+        )
+    );
   }
 }
 
-class LineChartSample2 extends StatefulWidget {
+
+class LineMonthChart extends StatefulWidget {
+  
   @override
-  _LineChartSample2State createState() => _LineChartSample2State();
+  _LineMonthChartState createState() => _LineMonthChartState();
 }
 
-class _LineChartSample2State extends State<LineChartSample2> {
-  List<Color> gradientColors = [
-    const Color(0xff23b6e6),
-    const Color(0xff02d39a),
-  ];
+class _LineMonthChartState extends State<LineMonthChart> {
 
   ChartApi chartApi;
 
@@ -193,6 +219,7 @@ class _LineChartSample2State extends State<LineChartSample2> {
     super.initState();
   }
 
+  
   @override
   Widget build(BuildContext context) {
     return Stack(
@@ -200,150 +227,151 @@ class _LineChartSample2State extends State<LineChartSample2> {
         AspectRatio(
           aspectRatio: 1.5,
           child: Container(
-            decoration: const BoxDecoration(
+            decoration: BoxDecoration(
                 borderRadius: BorderRadius.all(
-                  Radius.circular(5),
+                  Radius.circular(10),
                 ),
-                color: Colors.black),
+                color: Colors.white70,
+                border: Border.all(color: Colors.black38)
+            ),
             child: Padding(
                 padding: const EdgeInsets.only(
-                    right: 20.0, left: 20.0, top: 25, bottom: 10),
+                    right: 10,
+                    left: 15,
+                    top: 15,
+                    bottom: 5
+                ),
+                
                 child: FutureBuilder(
                   future: chartApi.getAllMonthUserRead(),
                   builder: (context, AsyncSnapshot<List<Chart>> data) {
-                    if (data.data == null || data == null) {
+                    
+                    if (data.data == null || data.data.isEmpty) {
                       return Center(
                         child: CircularProgressIndicator(),
                       );
+                    
                     } else {
+                      
                       int maxY = data.data.map((e) => e.bookNumber).toList().reduce(max);
 
                       return LineChart(LineChartData(
-                        // TODO fa vedere le griglie orizzontali e verticali
+                        // Griglie orizzontali e verticali.
                         gridData: FlGridData(
                           show: true,
                           drawVerticalLine: true,
-                          // TODO aumenta lo spessore delle linee, quindi quello regola
+                          // Spessore e colore delle linee.
                           getDrawingHorizontalLine: (value) {
                             return FlLine(
-                              // TODO colore delle linee e spessore di essa
-                              color: const Color(0xff37434d),
-                              strokeWidth: 1,
+                              color: Colors.black.withOpacity(0.5),
+                              strokeWidth: 0.5,
                             );
                           },
                           getDrawingVerticalLine: (value) {
                             return FlLine(
-                              color: const Color(0xff37434d),
-                              strokeWidth: 1,
+                              color: Colors.black.withOpacity(0.5),
+                              strokeWidth: 0.5,
                             );
                           },
                         ),
+                        
                         titlesData: FlTitlesData(
                           show: true,
-                          // TODO tutto quello che riguarda le scritto sotto
                           bottomTitles: SideTitles(
                             showTitles: true,
-                            reservedSize: 22,
-                            getTextStyles: (value) =>
-                                // TODO posso cambiare colore delle lettere dei mesi
-                                const TextStyle(
-                                    color: Color(0xff68737d),
-                                    /*fontWeight: FontWeight.bold,*/
-                                    fontSize: 12),
+                            reservedSize: 20,
+                            getTextStyles: (value) => const TextStyle(
+                                color: Color(0xff68737d),
+                                fontSize: 11
+                            ),
                             getTitles: (value) {
                               switch (value.toInt()) {
-                                case 0:
-                                  return 'Gen';
                                 case 1:
-                                  return 'Feb';
+                                  return 'Gen';
                                 case 2:
-                                  return 'Mar';
+                                  return 'Feb';
                                 case 3:
-                                  return 'Apr';
-                                case 4:
                                   return 'Mar';
+                                case 4:
+                                  return 'Apr';
                                 case 5:
-                                  return 'Giu';
+                                  return 'Mar';
                                 case 6:
-                                  return 'Lug';
+                                  return 'Giu';
                                 case 7:
-                                  return 'Ago';
+                                  return 'Lug';
                                 case 8:
-                                  return 'Set';
+                                  return 'Ago';
                                 case 9:
-                                  return 'Ott';
+                                  return 'Set';
                                 case 10:
-                                  return 'Nov';
+                                  return 'Ott';
                                 case 11:
+                                  return 'Nov';
+                                case 12:
                                   return 'Dic';
                               }
                               return '';
                             },
                             margin: 5,
                           ),
-                          // TODO scritte a sinistra
                           leftTitles: SideTitles(
                             showTitles: true,
                             getTextStyles: (value) => const TextStyle(
                               color: Color(0xff67727d),
-                              fontSize: 13,
+                              fontSize: 11,
                             ),
                             getTitles: (value) {
-                              switch (value.toInt()) {
-                                case 3:
-                                  return '3';
-                                case 6:
-                                  return '6';
-                                case 9:
-                                  return '9';
-                              }
-                              return '';
+                              return '${value.toInt()}';
                             },
                             reservedSize: 5,
-                            margin: 8,
+                            margin: 5,
                           ),
                         ),
 
-                        // TODO bordo intorno al grafico, piu fico senza
                         borderData: FlBorderData(
                             show: true,
                             border: Border.all(
-                                color: const Color(0xff37434d), width: 1)),
+                                color: Colors.black,
+                                width: 0.5
+                            )
+                        ),
+                        
                         minX: 1,
                         maxX: 12,
                         minY: 0,
                         maxY: maxY.toDouble(),
+                        
                         lineBarsData: [
                           LineChartBarData(
                             spots: [
                               for (int x = 0; x < data.data.length; x++)
-                                FlSpot(data.data[x].month.toDouble(),
-                                    data.data[x].bookNumber.toDouble())
+                                FlSpot(
+                                    data.data[x].month.toDouble(),
+                                    data.data[x].bookNumber.toDouble()
+                                )
                             ],
-                            isCurved: false,
-                            colors: [Colors.black, Colors.pink],
-                            // TODO spessore della barra
-                            barWidth: 2,
+                            
+                            isCurved: true,
+                            colors: [Colors.black38],
+                            barWidth: 1.5,
                             isStrokeCapRound: true,
-                            // TODO puntini della barra ad ogni mese
                             dotData: FlDotData(
                               show: true,
                             ),
-                            // TODO colore sotto la barra che va a sfumare
                             belowBarData: BarAreaData(
                               show: true,
-                              colors: gradientColors
+                              colors: [Colors.blueAccent, Colors.blue, Colors.teal]
                                   .map((color) => color.withOpacity(0.3))
                                   .toList(),
                             ),
                           ),
-                        ],
-                      ));
+                        ])
+                      );
                     }
-                  },
+                    },
                 )
-
-                ),
+            ),
           ),
         ),
       ],
