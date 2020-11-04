@@ -33,11 +33,15 @@ class _ProfileState extends State<Profile> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
+    return Container(
         child: SingleChildScrollView(
           physics: BouncingScrollPhysics(),
           child: Column(
             children: [
+
+              SizedBox(
+                height: 30,
+              ),
 
               Center(
                 child: Text(
@@ -89,6 +93,10 @@ class _ProfileState extends State<Profile> {
               Padding(
                 padding: EdgeInsets.all(10),
                 child: LineMonthChart(),
+              ),
+
+              SizedBox(
+                height: 30,
               )
 
             ]),
