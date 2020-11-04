@@ -32,22 +32,25 @@ class _HomeState extends State<Home> {
           future: bookApi.getBooks(),
           builder: (context, AsyncSnapshot<List<Book>> data) {
 
-            if (data.data == null || data == null) {
+            if (data.data == null) {
               return Center(
                 child: CircularProgressIndicator(),
               );
 
             } else {
-
               return StaggeredGridView.countBuilder(
+                  physics: BouncingScrollPhysics(),
                   crossAxisCount: 4,
-                  itemCount: (data.data == null) ? 0 : data.data.length,
+                  itemCount: data.data.length ?? 0,
                   itemBuilder: (context, index) {
 
                     return Card(
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(20),
+                        side: BorderSide(color: Colors.black38)
+                      ),
                       child: ClipRRect(
-                        borderRadius: BorderRadius.circular(10),
+                        borderRadius: BorderRadius.circular(20),
                         child: GestureDetector(
                           child: Image.network(
                               '${bookApi.urlServer}/download/${data.data[index].cover}'
