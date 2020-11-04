@@ -1,5 +1,6 @@
 import 'package:library_frontend/services/utils.dart';
 import 'package:http/http.dart' as http;
+import 'package:crypt/crypt.dart';
 import '../../models/user.dart';
 import 'dart:convert';
 
@@ -36,6 +37,15 @@ class UserApi extends Utils {
     );
 
     return (response.statusCode == 201) ? true : false;
+  }
+
+
+  // $5$rounds=10000$abcdefghijklmnop$51muKIziT9VAyDZ2ZueAYvAwgIYx0cLxUCIAlPoWaHD
+  // 51muKIziT9VAyDZ2ZueAYvAwgIYx0cLxUCIAlPoWaHD
+  String sha256Encrypt(String password) {
+    return Crypt.sha256(password, rounds: 12831, salt: 'good_game_man')
+        .toString()
+        .substring(30);
   }
 
 }
