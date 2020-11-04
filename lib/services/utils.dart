@@ -40,4 +40,15 @@ class Utils {
     sharedPreferences.setInt('id', id);
   }
 
+
+  Future<List<String>> getUser() async {
+    sharedPreferences = await SharedPreferences.getInstance();
+    return sharedPreferences.getStringList('user');
+  }
+
+  Future<void> setUser(String name, String surname, String email) async {
+    sharedPreferences = await SharedPreferences.getInstance();
+    sharedPreferences.setStringList('user', [name, surname, email]);
+  }
+
 }
