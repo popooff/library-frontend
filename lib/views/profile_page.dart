@@ -3,10 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:library_frontend/models/chart.dart';
 import 'package:library_frontend/services/rest_api/chart_api.dart';
+import 'package:library_frontend/services/rest_api/reservation_api.dart';
 import 'package:library_frontend/widgets/chart_text_indicator.dart';
 import 'dart:math';
 
 
+// TODO sistemare il fatto delle troppe get.
 class Profile extends StatefulWidget {
   
   @override
@@ -79,6 +81,24 @@ class _ProfileState extends State<Profile> {
                       ]),
                     ]),
                 ),
+              ),
+
+              SizedBox(
+                height: 10,
+              ),
+
+              Padding(
+                padding: EdgeInsets.only(left: 10, right: 10, bottom: 5),
+                child: BooksReservedReturned(true)
+              ),
+
+              SizedBox(
+                height: 5,
+              ),
+
+              Padding(
+                  padding: EdgeInsets.only(left: 10, right: 10, bottom: 5),
+                  child: BooksReservedReturned(false)
               ),
 
               SizedBox(
@@ -382,6 +402,89 @@ class _LineMonthChartState extends State<LineMonthChart> {
             ),
           ),
         ),
+      ],
+    );
+  }
+
+}
+
+
+class BooksReservedReturned extends StatefulWidget {
+  
+  final bool or;
+  BooksReservedReturned(this.or);
+
+  @override
+  _BooksReservedReturnedState createState() => _BooksReservedReturnedState();
+}
+
+class _BooksReservedReturnedState extends State<BooksReservedReturned> {
+
+  ReservationApi reservationApi;
+
+
+  @override
+  void initState() {
+    reservationApi = ReservationApi();
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+
+            Padding(
+              padding: EdgeInsets.only(left: 2),
+              child: Text(widget.or ? 'Libri prenotati' : 'Libri da restituire'),
+            ),
+
+            FlatButton(
+              onPressed: () {
+                Navigator.pushNamed(context, widget.or ? '/reservation' : '/return');
+              },
+              child: Text('Vedi tutti'),
+            )
+          ],
+        ),
+
+        Container(
+            height: 220.0,
+            child: FutureBuilder(
+              future: widget.or ? reservationApi.getAllBooksReservation(reservationApi.getUserId()) :
+                                  reservationApi.getBooksToBeReturned(reservationApi.getUserId()),
+              builder: (context, data) {
+
+                if (data.data == null || data.data.isEmpty) {
+                  return Center(
+                    child: CircularProgressIndicator(),
+                  );
+
+                } else {
+                  return ListView(
+                    scrollDirection: Axis.horizontal,
+                    children: [
+
+                      for (int index = 0; index < data.data.length / 3; index++)
+                        Padding(
+                          padding: EdgeInsets.only(left: 2, right: 2),
+                          child: Container(
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(5),
+                                child: Image.network('${reservationApi.urlServer}/download/${data.data[index].book.cover}'),
+                              )
+                          ),
+                        )
+                    ],
+                  );
+                }
+              },
+            )
+        )
+
       ],
     );
   }
