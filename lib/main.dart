@@ -52,7 +52,10 @@ class _InitialState extends State<Initial> {
       extendBody: true,
 
       drawer: LibraryDrawer(),
-      body: pages[currentPage],
+      body: SafeArea(
+        bottom: false,
+        child: pages[currentPage],
+      ),
 
       bottomNavigationBar: LibraryBottomBar(
           bottoms: [
