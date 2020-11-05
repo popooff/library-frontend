@@ -23,7 +23,7 @@ class Routes {
       case '/initial':
         return MaterialPageRoute(builder: (_) => Initial());
         break;
-/*
+
       case '/reservation':
         return MaterialPageRoute(builder: (_) => BookedPage());
         break;
@@ -31,7 +31,7 @@ class Routes {
       case '/return':
         return MaterialPageRoute(builder: (_) => ReturnedPage());
         break;
-*/
+
       default:
         return errorPage();
     }
