@@ -26,14 +26,14 @@ class LibraryBottomBar extends StatelessWidget {
     return Container(
         margin: margin,
         padding: padding,
-        height: 70,
+        height: 67,
 
         child: Card(
-          color: Colors.black.withOpacity(0.3),
+          color: Colors.blueGrey.withOpacity(0.35),
 
           shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(borderRadius),
-              side: BorderSide(color: Colors.black38)
+              side: BorderSide(color: Colors.blueGrey)
           ),
 
           child: Row(
