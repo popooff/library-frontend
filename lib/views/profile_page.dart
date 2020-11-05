@@ -348,7 +348,7 @@ class _LineMonthChartState extends State<LineMonthChart> {
                         minX: 1,
                         maxX: 12,
                         minY: 0,
-                        maxY: maxY.toDouble(),
+                        maxY: maxY.toDouble() + 1,
                         
                         lineBarsData: [
                           LineChartBarData(
