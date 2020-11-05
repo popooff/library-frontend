@@ -3,7 +3,6 @@ import 'package:library_frontend/services/routes.dart';
 import 'package:library_frontend/views/home_page.dart';
 import 'package:library_frontend/views/profile_page.dart';
 import 'package:library_frontend/views/search_page.dart';
-import 'package:library_frontend/widgets/library_drawer.dart';
 import 'widgets/library_bottom_nav_bar.dart';
 
 
@@ -51,7 +50,6 @@ class _InitialState extends State<Initial> {
     return Scaffold(
       extendBody: true,
 
-      drawer: LibraryDrawer(),
       body: SafeArea(
         bottom: false,
         child: pages[currentPage],
