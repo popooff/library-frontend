@@ -3,6 +3,7 @@ import 'package:library_frontend/main.dart';
 import 'package:library_frontend/views/authentication/login_page.dart';
 import 'package:library_frontend/views/authentication/registration_page.dart';
 import 'package:library_frontend/views/booked_page.dart';
+import 'package:library_frontend/views/profile_page.dart';
 import 'package:library_frontend/views/returned_page.dart';
 
 
@@ -22,14 +23,6 @@ class Routes {
 
       case '/initial':
         return MaterialPageRoute(builder: (_) => Initial());
-        break;
-
-      case '/reservation':
-        return MaterialPageRoute(builder: (_) => BookedPage());
-        break;
-
-      case '/return':
-        return MaterialPageRoute(builder: (_) => ReturnedPage());
         break;
 
       default:
