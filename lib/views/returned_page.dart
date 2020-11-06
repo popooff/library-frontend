@@ -24,71 +24,61 @@ class _ReturnedPageState extends State<ReturnedPage> {
   @override
   Widget build(BuildContext context) {
 
+    final List<Reservation> data = ModalRoute.of(context).settings.arguments;
+
     return Scaffold(
       body: SafeArea(
-        child: FutureBuilder(
-          future: reservationApi.getBooksToBeReturned(reservationApi.getUserId()),
-          builder: (context, AsyncSnapshot<List<Reservation>> data) {
+          child: ListView.builder(
+              itemCount: (data == null) ? 0 : data.length,
+              itemBuilder: (context, index) {
 
-            if (data.data == null || data == null) {
-              return Center(
-                child: CircularProgressIndicator(),
-              );
-
-            } else {
-              return ListView.builder(
-                  itemCount: (data.data == null) ? 0 : data.data.length,
-                  itemBuilder: (context, index) {
-
-                    return Card(
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(15),
-                        side: BorderSide(color: Colors.black38)
+                return Card(
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(15),
+                      side: BorderSide(color: Colors.black38)
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      ListTile(
+                        title: Text('${data[index].book.title.toString()}'),
+                        subtitle: Text('${data[index].book.kind.toString()}'),
+                        leading: Icon(Icons.book_outlined),
                       ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.end,
-                        children: [
-                          ListTile(
-                            title: Text('${data.data[index].book.title.toString()}'),
-                            subtitle: Text('${data.data[index].book.kind.toString()}'),
-                            leading: Icon(Icons.book_outlined),
+
+                      Padding(
+                        padding: EdgeInsets.only(right: 5),
+                        child: FlatButton(
+
+                          onPressed: () async {
+                            bool returned = await reservationApi.returnBook(data[index].idReservation);
+
+                            if (returned) {
+                              Navigator.pushNamedAndRemoveUntil(context, '/initial', (route) => false);
+
+                            } else {
+                              showDialog(
+                                  context: context,
+                                  builder: (_) => MyAlertDialog(
+                                      content: 'Problemi nella restituzione del libro!'
+                                  )
+                              );
+                            }
+                          },
+
+                          child: Icon(Icons.check),
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10),
+                              side: BorderSide(color: Colors.black)
                           ),
-
-                          Padding(
-                            padding: EdgeInsets.only(right: 5),
-                            child: FlatButton(
-                              onPressed: () async {
-                                bool returned = await reservationApi.returnBook(data.data[index].idReservation);
-
-                                if (returned) {
-                                  Navigator.popAndPushNamed(context, '/return');
-
-                                } else {
-                                  showDialog(
-                                      context: context,
-                                      builder: (_) => MyAlertDialog(
-                                          content: 'Problemi nella restituzione del libro!'
-                                      )
-                                  );
-                                }
-                              },
-                              child: Icon(Icons.check),
-                              shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(10),
-                                  side: BorderSide(color: Colors.black)
-                              ),
-                            ),
-                          )
-                        ],
-                      ),
-                    );
-                  }
-              );
-            }
-
-          },
-        ),
+                        ),
+                      )
+                    ],
+                  ),
+                );
+              })
       ),
     );
   }
+
 }
