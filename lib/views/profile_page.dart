@@ -4,11 +4,12 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:library_frontend/models/chart.dart';
 import 'package:library_frontend/services/rest_api/chart_api.dart';
 import 'package:library_frontend/services/rest_api/reservation_api.dart';
+import 'package:library_frontend/views/booked_page.dart';
+import 'package:library_frontend/views/returned_page.dart';
 import 'package:library_frontend/widgets/chart_text_indicator.dart';
 import 'dart:math';
 
 
-// TODO sistemare il fatto delle troppe get.
 class Profile extends StatefulWidget {
   
   @override
@@ -93,7 +94,7 @@ class _ProfileState extends State<Profile> {
               ),
 
               SizedBox(
-                height: 5,
+                height: 10,
               ),
 
               Padding(
@@ -433,51 +434,88 @@ class _BooksReservedReturnedState extends State<BooksReservedReturned> {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-
-            Padding(
-              padding: EdgeInsets.only(left: 2),
-              child: Text(widget.or ? 'Libri prenotati' : 'Libri da restituire'),
-            ),
-
-            FlatButton(
-              onPressed: () {
-                Navigator.pushNamed(context, widget.or ? '/reservation' : '/return');
-              },
-              child: Text('Vedi tutti'),
-            )
-          ],
-        ),
 
         Container(
-            height: 220.0,
+            height: 250.0,
             child: FutureBuilder(
               future: widget.or ? reservationApi.getAllBooksReservation(reservationApi.getUserId()) :
                                   reservationApi.getBooksToBeReturned(reservationApi.getUserId()),
               builder: (context, data) {
 
-                if (data.data == null || data.data.isEmpty) {
+                if (data.data == null) {
                   return Center(
                     child: CircularProgressIndicator(),
                   );
 
                 } else {
-                  return ListView(
-                    scrollDirection: Axis.horizontal,
+
+                  if (data.data != null && data.data.isEmpty) {
+                    return Card(
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(5),
+                          side: BorderSide(color: Colors.black38.withOpacity(0.4))
+                        ),
+                        child: Center(
+                          child: Text(
+                            widget.or ? 'Nessun libro prenotato!' : 'Nessun libro da restituire!',
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.black.withOpacity(0.5)
+                            ),
+                          ),
+                        ),
+                    );
+                  }
+
+                  return Column(
+
                     children: [
 
-                      for (int index = 0; index < data.data.length / 3; index++)
-                        Padding(
-                          padding: EdgeInsets.only(left: 2, right: 2),
-                          child: Container(
-                              child: ClipRRect(
-                                borderRadius: BorderRadius.circular(5),
-                                child: Image.network('${reservationApi.urlServer}/download/${data.data[index].book.cover}'),
-                              )
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+
+                          Padding(
+                            padding: EdgeInsets.only(left: 2),
+                            child: Text(widget.or ? 'Libri prenotati' : 'Libri da restituire'),
                           ),
-                        )
+
+                          FlatButton(
+                            onPressed: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => widget.or ? BookedPage() : ReturnedPage(),
+                                  settings: RouteSettings(
+                                    arguments: data.data,
+                                  ),
+                                ),
+                              );
+                            },
+                            child: Text('Vedi tutti'),
+                          )
+                        ],
+                      ),
+
+                      Expanded(
+                          child: ListView(
+                            scrollDirection: Axis.horizontal,
+                            children: [
+
+                              for (int index = 0; index < data.data.length / 3; index++)
+                                Padding(
+                                  padding: EdgeInsets.only(left: 2, right: 2),
+                                  child: Container(
+                                      child: ClipRRect(
+                                        borderRadius: BorderRadius.circular(5),
+                                        child: Image.network('${reservationApi.urlServer}/download/${data.data[index].book.cover}'),
+                                      )
+                                  ),
+                                )
+                            ],
+                          )
+                      )
                     ],
                   );
                 }
