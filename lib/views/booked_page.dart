@@ -22,47 +22,30 @@ class _BookedPageState extends State<BookedPage> {
 
   @override
   Widget build(BuildContext context) {
+
+    final List<Reservation> data = ModalRoute.of(context).settings.arguments;
+
     return Scaffold(
       body: SafeArea(
-        child: FutureBuilder(
-          future: reservationApi.getAllBooksReservation(reservationApi.getUserId()),
-          builder: (context, AsyncSnapshot<List<Reservation>> data) {
+        child: ListView.builder(
+            itemCount: (data == null) ? 0 : data.length,
+            itemBuilder: (context, index) {
 
-            if (data.data == null || data == null) {
-              return Center(
-                child: CircularProgressIndicator(),
+              return Card(
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(15),
+                    side: BorderSide(color: Colors.black38)
+                ),
+
+                child: ListTile(
+                  title: Text('${data[index].book.title.toString()}'),
+                  subtitle: Text('${data[index].book.kind.toString()}'),
+                  leading: Icon(Icons.book_outlined),
+                ),
               );
-
-            } else {
-
-              return ListView.builder(
-                  itemCount: (data.data == null) ? 0 : data.data.length,
-                  itemBuilder: (context, index) {
-
-                    return Card(
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(15),
-                          side: BorderSide(color: Colors.black38)
-                      ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.end,
-                        children: [
-                          ListTile(
-                            title: Text('${data.data[index].book.title.toString()}'),
-                            subtitle: Text('${data.data[index].book.kind.toString()}'),
-                            leading: Icon(Icons.book_outlined),
-                          ),
-                        ],
-                      ),
-                    );
-                  }
-              );
-            }
-          },
-        ),
+            })
       ),
     );
-
   }
 
 }
