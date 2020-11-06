@@ -4,7 +4,6 @@ import 'package:library_frontend/widgets/my_alert.dart';
 import '../../models/user.dart';
 
 
-// TODO mettere un caricamento nel momento in cui si preme login e si aspetta.
 class LoginPage extends StatefulWidget {
 
   @override
@@ -16,6 +15,7 @@ class _LoginPageState extends State<LoginPage> {
 
   UserApi userApi;
   bool obscurePassword = true;
+  bool log = false;
   TextEditingController emailController;
   TextEditingController passwordController;
 
@@ -98,6 +98,10 @@ class _LoginPageState extends State<LoginPage> {
                   FlatButton(
                     onPressed: () async {
 
+                      setState(() {
+                        log = true;
+                      });
+
                       bool logged = await userApi.loginUser(
                           User(
                               email: emailController.text,
@@ -118,7 +122,12 @@ class _LoginPageState extends State<LoginPage> {
                       }
 
                     },
-                    child: Text('Login'),
+                    child: log ? SizedBox(
+                      height: 20,
+                      width: 20,
+                      child: CircularProgressIndicator(
+                        valueColor: new AlwaysStoppedAnimation<Color>(Colors.white),
+                      )) : Text('Login'),
                     textColor: Colors.white,
                     color: Colors.blue.shade300,
                   ),
