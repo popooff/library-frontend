@@ -50,7 +50,7 @@ class ReservationApi extends Utils {
   Future<List<Reservation>> getAllBooksReservation(Future<int> userId) async {
     idUser = await userId;
     var response = await http.get(
-        '$urlServer/prenotazioni/libriUtente/$idUser',
+        '$urlServer/prenotazioni/getBookPrenotations/$idUser',
         headers: header
     );
 
@@ -61,6 +61,11 @@ class ReservationApi extends Utils {
       list.add(
           Reservation(
               book: book,
+              bookedDatesForTheSameBook: el['Prenotazioni']
+                  .toString()
+                  .split(',')
+                  .map((e) => DateTime.parse(e))
+                  .toList()
           )
       );
     }
