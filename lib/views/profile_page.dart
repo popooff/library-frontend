@@ -354,7 +354,7 @@ class _LineMonthChartState extends State<LineMonthChart> {
                               return '${value.toInt()}';
                             },
                             reservedSize: 5,
-                            margin: 5,
+                            margin: 8,
                           ),
                         ),
 
