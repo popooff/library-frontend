@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:library_frontend/services/rest_api/user_api.dart';
 import 'package:library_frontend/widgets/my_alert.dart';
 import '../../models/user.dart';
+import 'package:blobs/blobs.dart';
 
 
 class LoginPage extends StatefulWidget {
@@ -40,20 +41,47 @@ class _LoginPageState extends State<LoginPage> {
   Widget build(BuildContext context) {
 
     return Scaffold(
-        body: SafeArea(
-          child: Container(
-            color: Colors.white,
-            height: MediaQuery.of(context).size.height,
-            width: MediaQuery.of(context).size.width,
+      body: SafeArea(
+        child: Container(
+          color: Colors.white,
+          height: MediaQuery.of(context).size.height,
+          width: MediaQuery.of(context).size.width,
 
+          child: Blob.animatedFromID(
+            size: 500,
+            id:['11-5-380321', '11-5-990', '11-5-76607', '11-5-31'],
+            duration: Duration(seconds: 3),
+            styles: BlobStyles(
+              gradient: LinearGradient(
+                  colors: [
+                    Colors.blueAccent.withOpacity(0.2),
+                    Colors.blue.withOpacity(0.4),
+                  ]).createShader(Rect.fromLTRB(0, 100, 200, 300)),
+            ),
+            loop: true,
             child: Padding(
               padding: EdgeInsets.only(left: 15, right: 15),
               child: ListView(
                 children: [
 
-                  Image.asset(
-                    'assets/library_login.png',
-                    height: 280,
+                  SizedBox(
+                    height: 120,
+                  ),
+
+                  Align(
+                    alignment: Alignment.centerRight,
+                    child: Text(
+                      'Library      \nLogin',
+                      style: TextStyle(
+                          fontSize: 22,
+                          color: Colors.black.withOpacity(0.5),
+                          fontWeight: FontWeight.bold
+                      ),
+                    ),
+                  ),
+
+                  SizedBox(
+                    height: 30,
                   ),
 
                   Container(
@@ -113,6 +141,11 @@ class _LoginPageState extends State<LoginPage> {
                         Navigator.pushReplacementNamed(context, '/initial');
 
                       } else {
+
+                        setState(() {
+                          log = logged;
+                        });
+
                         showDialog(
                             context: context,
                             builder: (_) => MyAlertDialog(
@@ -122,35 +155,37 @@ class _LoginPageState extends State<LoginPage> {
                       }
 
                     },
+
                     child: log ? SizedBox(
-                      height: 20,
-                      width: 20,
-                      child: CircularProgressIndicator(
-                        valueColor: new AlwaysStoppedAnimation<Color>(Colors.white),
-                      )) : Text('Login'),
+                        height: 20,
+                        width: 20,
+                        child: CircularProgressIndicator(
+                          valueColor: new AlwaysStoppedAnimation<Color>(Colors.white),
+                        )) : Text('Login'),
                     textColor: Colors.white,
-                    color: Colors.blue.shade300,
+                    color: Colors.blue.shade400,
                   ),
 
                   Center(
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text('Non hai un account?'),
-                        FlatButton(
-                            onPressed: () {
-                              Navigator.pushReplacementNamed(context, '/register');
-                            },
-                            child: Text('Registrati')
-                        )
-                      ],
-                    )
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text('Non hai un account?'),
+                          FlatButton(
+                              onPressed: () {
+                                Navigator.pushReplacementNamed(context, '/register');
+                              },
+                              child: Text('Registrati')
+                          )
+                        ],
+                      )
                   )
-                ],
-              ),
+                ]),
             ),
           ),
-        )
+        ),
+      ),
     );
   }
+
 }
