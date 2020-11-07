@@ -29,6 +29,7 @@ class _ReturnedPageState extends State<ReturnedPage> {
     return Scaffold(
       body: SafeArea(
           child: ListView.builder(
+              physics: BouncingScrollPhysics(),
               itemCount: (data == null) ? 0 : data.length,
               itemBuilder: (context, index) {
 
@@ -43,7 +44,10 @@ class _ReturnedPageState extends State<ReturnedPage> {
                       ListTile(
                         title: Text('${data[index].book.title.toString()}'),
                         subtitle: Text('${data[index].book.kind.toString()}'),
-                        leading: Icon(Icons.book_outlined),
+                        leading: CircleAvatar(
+                          radius: 30,
+                          backgroundImage: NetworkImage('${reservationApi.urlServer}/download/${data[index].book.cover}'),
+                        )
                       ),
 
                       Padding(
@@ -60,21 +64,20 @@ class _ReturnedPageState extends State<ReturnedPage> {
                               showDialog(
                                   context: context,
                                   builder: (_) => MyAlertDialog(
-                                      content: 'Problemi nella restituzione del libro!'
+                                      content: 'Problemi con la restituzione del libro!'
                                   )
                               );
                             }
                           },
 
-                          child: Icon(Icons.check),
+                          child: Text('Restituisci', style: TextStyle(color: Colors.black54),),
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(10),
-                              side: BorderSide(color: Colors.black)
+                              side: BorderSide(color: Colors.black.withOpacity(0.5))
                           ),
                         ),
                       )
-                    ],
-                  ),
+                    ]),
                 );
               })
       ),
