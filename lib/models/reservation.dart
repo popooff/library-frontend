@@ -10,13 +10,17 @@ class Reservation {
   final DateTime dateReservation;
   final DateTime dateReturned;
 
+  // Usata solo per inglobare le date per la pagina dei libri prenotati.
+  final List<DateTime> bookedDatesForTheSameBook;
+
   Reservation({
     this.idUser,
     this.idBook,
     this.idReservation,
     this.book,
     this.dateReservation,
-    this.dateReturned
+    this.dateReturned,
+    this.bookedDatesForTheSameBook
   });
 
 
