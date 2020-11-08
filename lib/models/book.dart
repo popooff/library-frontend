@@ -1,4 +1,6 @@
+
 class Book {
+
   int id;
   String title;
   String kind;
@@ -7,14 +9,16 @@ class Book {
   String cover;
   int quantity;
 
-  Book(
-      {this.id,
-      this.title,
-      this.kind,
-      this.author,
-      this.plot,
-      this.cover,
-      this.quantity});
+  Book({
+    this.id,
+    this.title,
+    this.kind,
+    this.author,
+    this.plot,
+    this.cover,
+    this.quantity
+  });
+
 
   factory Book.fromJson(Map<String, dynamic> json) {
     return Book(
@@ -27,4 +31,5 @@ class Book {
       quantity: json['Quantita'],
     );
   }
+
 }
