@@ -1,8 +1,6 @@
 import 'package:shared_preferences/shared_preferences.dart';
 
-
 class Utils {
-
   final String urlServer = 'http://82.84.32.209:8090/api';
   SharedPreferences sharedPreferences;
   String token;
@@ -11,13 +9,12 @@ class Utils {
     // token = await _token;
 
     // Map map = {
-      'Accept' : 'application/json',
-      // 'Authorization' : token
+    'Accept': 'application/json',
+    // 'Authorization' : token
     // };
 
     // return map;
   };
-
 
   Future<String> getToken() async {
     sharedPreferences = await SharedPreferences.getInstance();
@@ -29,7 +26,6 @@ class Utils {
     sharedPreferences.setString('token', token);
   }
 
-
   Future<int> getUserId() async {
     sharedPreferences = await SharedPreferences.getInstance();
     return sharedPreferences.getInt('id');
@@ -40,7 +36,6 @@ class Utils {
     sharedPreferences.setInt('id', id);
   }
 
-
   Future<List<String>> getUser() async {
     sharedPreferences = await SharedPreferences.getInstance();
     return sharedPreferences.getStringList('user');
@@ -50,5 +45,4 @@ class Utils {
     sharedPreferences = await SharedPreferences.getInstance();
     sharedPreferences.setStringList('user', [name, surname, email]);
   }
-
 }
