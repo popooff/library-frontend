@@ -33,6 +33,11 @@ class _BookedPageState extends State<BookedPage> {
       Image.asset('assets/gif_4.gif', fit: BoxFit.cover),
       Image.asset('assets/gif_5.gif', fit: BoxFit.cover),
       Image.asset('assets/gif_6.gif', fit: BoxFit.cover),
+      Image.asset('assets/gif_7.gif', fit: BoxFit.cover),
+      Image.asset('assets/gif_8.gif', fit: BoxFit.cover),
+      Image.asset('assets/gif_9.gif', fit: BoxFit.cover),
+      Image.asset('assets/gif_10.gif', fit: BoxFit.cover),
+      Image.asset('assets/gif_11.gif', fit: BoxFit.cover),
     ];
 
     return Scaffold(
@@ -69,8 +74,7 @@ class _BookedPageState extends State<BookedPage> {
                             "Autore: ${data[index].book.author.toString().substring(1, data[index].book.author.toString().length - 1)}",
                             style: TextStyle(
                                 fontSize: 16,
-                                color: Colors.black.withOpacity(0.4)
-                            ),
+                                color: Colors.black.withOpacity(0.70)),
                           ),
                         ],
                       ),
@@ -81,7 +85,7 @@ class _BookedPageState extends State<BookedPage> {
                         child: Text("Libro prenotato il: ${data[index].bookedDatesForTheSameBook.map((e) => e.toString().split(' ')[0]).toString()}",
                             style: TextStyle(
                                 fontSize: 16,
-                                color: Colors.black.withOpacity(0.4)
+                                color: Colors.black.withOpacity(0.70)
                             )
                         ),
                       )
