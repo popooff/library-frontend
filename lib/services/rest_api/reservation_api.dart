@@ -33,12 +33,11 @@ class ReservationApi extends Utils {
 
   Future<bool> returnBook(int idReservation) async {
     reservation = Reservation(
-        idReservation: idReservation,
         dateReturned: DateTime.parse(DateTime.now().toString().split(' ')[0])
     );
 
     var response = await http.put(
-        '$urlServer/prenotazioni/returnBook',
+        '$urlServer/prenotazioni/returnBook/$idReservation',
         headers: header,
         body: reservation.returnedJson()
     );
