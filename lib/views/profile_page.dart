@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:library_frontend/models/chart.dart';
@@ -6,6 +5,7 @@ import 'package:library_frontend/services/rest_api/chart_api.dart';
 import 'package:library_frontend/services/rest_api/reservation_api.dart';
 import 'package:library_frontend/views/booked_page.dart';
 import 'package:library_frontend/views/returned_page.dart';
+import 'package:library_frontend/widgets/not_found.dart';
 import 'package:library_frontend/widgets/chart_text_indicator.dart';
 import 'dart:math';
 
@@ -127,6 +127,7 @@ class _ProfileState extends State<Profile> {
 }
 
 
+
 class CakeKindChart extends StatefulWidget {
 
   final ChartApi chartApi;
@@ -158,12 +159,17 @@ class _CakeKindChartState extends State<CakeKindChart> {
         child: FutureBuilder(
           future: widget.chartApi.getAllKindUserRead(widget.chartApi.getUserId()),
           builder: (context, AsyncSnapshot<List<Chart>> data) {
-            if (data.data == null || data.data.isEmpty) {
+            if (data.data == null) {
               return Center(
                 child: CircularProgressIndicator(),
               );
 
             } else {
+
+              if (data.data != null && data.data.isEmpty) {
+                return NotFound('Grafico dei generi più letti non disponibile!');
+              }
+
               return AspectRatio(
                 aspectRatio: 1.5,
                 child: Card(
@@ -232,6 +238,7 @@ class _CakeKindChartState extends State<CakeKindChart> {
 }
 
 
+
 class LineMonthChart extends StatefulWidget {
   
   @override
@@ -251,163 +258,166 @@ class _LineMonthChartState extends State<LineMonthChart> {
   
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      children: [
-        AspectRatio(
-          aspectRatio: 1.5,
-          child: Container(
-            decoration: BoxDecoration(
-                borderRadius: BorderRadius.all(
-                  Radius.circular(10),
-                ),
-                color: Colors.white70,
-                border: Border.all(color: Colors.black38)
-            ),
-            child: Padding(
-                padding: const EdgeInsets.only(
-                    right: 10,
-                    left: 15,
-                    top: 15,
-                    bottom: 5
-                ),
-                
-                child: FutureBuilder(
-                  future: chartApi.getAllMonthUserRead(),
-                  builder: (context, AsyncSnapshot<List<Chart>> data) {
-                    
-                    if (data.data == null || data.data.isEmpty) {
-                      return Center(
-                        child: CircularProgressIndicator(),
-                      );
-                    
-                    } else {
-                      
-                      int maxY = data.data.map((e) => e.bookNumber).toList().reduce(max);
 
-                      return LineChart(LineChartData(
-                        // Griglie orizzontali e verticali.
-                        gridData: FlGridData(
-                          show: true,
-                          drawVerticalLine: true,
-                          // Spessore e colore delle linee.
-                          getDrawingHorizontalLine: (value) {
-                            return FlLine(
-                              color: Colors.black.withOpacity(0.5),
-                              strokeWidth: 0.5,
-                            );
-                          },
-                          getDrawingVerticalLine: (value) {
-                            return FlLine(
-                              color: Colors.black.withOpacity(0.5),
-                              strokeWidth: 0.5,
-                            );
-                          },
-                        ),
-                        
-                        titlesData: FlTitlesData(
-                          show: true,
-                          bottomTitles: SideTitles(
-                            showTitles: true,
-                            reservedSize: 20,
-                            getTextStyles: (value) => const TextStyle(
-                                color: Color(0xff68737d),
-                                fontSize: 11
-                            ),
-                            getTitles: (value) {
-                              switch (value.toInt()) {
-                                case 1:
-                                  return 'Gen';
-                                case 2:
-                                  return 'Feb';
-                                case 3:
-                                  return 'Mar';
-                                case 4:
-                                  return 'Apr';
-                                case 5:
-                                  return 'Mar';
-                                case 6:
-                                  return 'Giu';
-                                case 7:
-                                  return 'Lug';
-                                case 8:
-                                  return 'Ago';
-                                case 9:
-                                  return 'Set';
-                                case 10:
-                                  return 'Ott';
-                                case 11:
-                                  return 'Nov';
-                                case 12:
-                                  return 'Dic';
-                              }
-                              return '';
-                            },
-                            margin: 5,
-                          ),
-                          leftTitles: SideTitles(
-                            showTitles: true,
-                            getTextStyles: (value) => const TextStyle(
-                              color: Color(0xff67727d),
-                              fontSize: 11,
-                            ),
-                            getTitles: (value) {
-                              return '${value.toInt()}';
-                            },
-                            reservedSize: 5,
-                            margin: 8,
-                          ),
-                        ),
+    return Container(
+        child: FutureBuilder(
+            future: chartApi.getAllMonthUserRead(),
+            builder: (context, AsyncSnapshot<List<Chart>> data) {
 
-                        borderData: FlBorderData(
-                            show: true,
-                            border: Border.all(
-                                color: Colors.black,
-                                width: 0.5
-                            )
-                        ),
-                        
-                        minX: 1,
-                        maxX: 12,
-                        minY: 0,
-                        maxY: maxY.toDouble() + 1,
-                        
-                        lineBarsData: [
-                          LineChartBarData(
-                            spots: [
-                              for (int x = 0; x < data.data.length; x++)
-                                FlSpot(
-                                    data.data[x].month.toDouble(),
-                                    data.data[x].bookNumber.toDouble()
-                                )
-                            ],
-                            
-                            isCurved: true,
-                            colors: [Colors.black38],
-                            barWidth: 1.5,
-                            isStrokeCapRound: true,
-                            dotData: FlDotData(
-                              show: true,
-                            ),
-                            belowBarData: BarAreaData(
-                              show: true,
-                              colors: [Colors.blueAccent, Colors.blue, Colors.teal]
-                                  .map((color) => color.withOpacity(0.3))
-                                  .toList(),
-                            ),
-                          ),
-                        ])
-                      );
-                    }
-                    },
-                )
-            ),
-          ),
-        ),
-      ],
+              if (data.data == null) {
+                return Center(child: CircularProgressIndicator());
+
+              } else {
+
+                if (data.data != null && data.data.isEmpty) {
+                  return NotFound('Grafico delle prenotazioni mensili non\ndisponibile!');
+                }
+
+                int maxY = data.data.map((e) => e.bookNumber).toList().reduce(max);
+
+                return Stack(
+                    children: [
+                      AspectRatio(
+                          aspectRatio: 1.5,
+                          child: Container(
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.all(
+                                    Radius.circular(10),
+                                  ),
+                                  color: Colors.white70,
+                                  border: Border.all(color: Colors.black38)
+                              ),
+                              child: Padding(
+                                padding: const EdgeInsets.only(
+                                    right: 10,
+                                    left: 15,
+                                    top: 15,
+                                    bottom: 5
+                                ),
+
+                                child: LineChart(LineChartData(
+                                    gridData: FlGridData(
+                                      show: true,
+                                      drawVerticalLine: true,
+                                      getDrawingHorizontalLine: (value) {
+                                        return FlLine(
+                                          color: Colors.black.withOpacity(0.5),
+                                          strokeWidth: 0.5,
+                                        );
+                                      },
+                                      getDrawingVerticalLine: (value) {
+                                        return FlLine(
+                                          color: Colors.black.withOpacity(0.5),
+                                          strokeWidth: 0.5,
+                                        );
+                                      },
+                                    ),
+
+                                    titlesData: FlTitlesData(
+                                      show: true,
+                                      bottomTitles: SideTitles(
+                                        showTitles: true,
+                                        reservedSize: 20,
+                                        getTextStyles: (value) => const TextStyle(
+                                            color: Color(0xff68737d),
+                                            fontSize: 11
+                                        ),
+
+                                        getTitles: (value) {
+                                          switch (value.toInt()) {
+                                            case 1:
+                                              return 'Gen';
+                                            case 2:
+                                              return 'Feb';
+                                            case 3:
+                                              return 'Mar';
+                                            case 4:
+                                              return 'Apr';
+                                            case 5:
+                                              return 'Mar';
+                                            case 6:
+                                              return 'Giu';
+                                            case 7:
+                                              return 'Lug';
+                                            case 8:
+                                              return 'Ago';
+                                            case 9:
+                                              return 'Set';
+                                            case 10:
+                                              return 'Ott';
+                                            case 11:
+                                              return 'Nov';
+                                            case 12:
+                                              return 'Dic';
+                                          }
+                                          return '';
+                                        },
+                                        margin: 5,
+                                      ),
+                                      leftTitles: SideTitles(
+                                        showTitles: true,
+                                        getTextStyles: (value) => const TextStyle(
+                                          color: Color(0xff67727d),
+                                          fontSize: 11,
+                                        ),
+                                        getTitles: (value) {
+                                          return '${value.toInt()}';
+                                        },
+                                        reservedSize: 5,
+                                        margin: 8,
+                                      ),
+                                    ),
+
+                                    borderData: FlBorderData(
+                                        show: true,
+                                        border: Border.all(
+                                            color: Colors.black,
+                                            width: 0.5
+                                        )
+                                    ),
+
+                                    minX: 1,
+                                    maxX: 12,
+                                    minY: 0,
+                                    maxY: maxY.toDouble() + 1,
+
+                                    lineBarsData: [
+                                      LineChartBarData(
+                                        spots: [
+                                          for (int x = 0; x < data.data.length; x++)
+                                            FlSpot(
+                                                data.data[x].month.toDouble(),
+                                                data.data[x].bookNumber.toDouble()
+                                            )
+                                        ],
+
+                                        isCurved: true,
+                                        colors: [Colors.black38],
+                                        barWidth: 1.5,
+                                        isStrokeCapRound: true,
+                                        dotData: FlDotData(
+                                          show: true,
+                                        ),
+                                        belowBarData: BarAreaData(
+                                          show: true,
+                                          colors: [Colors.blueAccent, Colors.blue, Colors.teal]
+                                              .map((color) => color.withOpacity(0.3))
+                                              .toList(),
+                                        ),
+                                      ),
+                                    ])
+                                ),
+                              )
+                          )
+                      )
+                    ]);
+              }
+            })
     );
   }
 
 }
+
 
 
 class BooksReservedReturned extends StatefulWidget {
@@ -450,22 +460,7 @@ class _BooksReservedReturnedState extends State<BooksReservedReturned> {
                 } else {
 
                   if (data.data != null && data.data.isEmpty) {
-                    return Card(
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(5),
-                          side: BorderSide(color: Colors.black38.withOpacity(0.4))
-                        ),
-                        child: Center(
-                          child: Text(
-                            widget.or ? 'Nessun libro prenotato!' : 'Nessun libro da restituire!',
-                            style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.black.withOpacity(0.5)
-                            ),
-                          ),
-                        ),
-                    );
+                    return NotFound(widget.or ? 'Nessun libro prenotato!' : 'Nessun libro da restituire!');
                   }
 
                   return Column(
