@@ -39,7 +39,14 @@ class _LoginPageState extends State<LoginPage> {
     userApi = UserApi();
     emailController = TextEditingController(text: (widget.user == null) ? "": widget.user.email);
     passwordController = TextEditingController();
+    autoLogin();
     super.initState();
+  }
+
+  Future<void> autoLogin() async {
+    if (await userApi.isLog() ?? false) {
+      Navigator.pushReplacementNamed(context, '/initial');
+    }
   }
 
   @override
@@ -150,6 +157,7 @@ class _LoginPageState extends State<LoginPage> {
 
                         if (logged) {
                           Navigator.pushReplacementNamed(context, '/initial');
+                          userApi.setLog(true);
 
                         } else {
 

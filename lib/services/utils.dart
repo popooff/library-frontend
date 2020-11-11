@@ -4,7 +4,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 class Utils {
 
   final String urlServer = 'http://82.84.32.209:8090/api';
-  SharedPreferences sharedPreferences;
   String token;
 
   Map<String, String> header /*(Future<dynamic> _token) async*/ = {
@@ -20,35 +19,51 @@ class Utils {
 
 
   Future<String> getToken() async {
-    sharedPreferences = await SharedPreferences.getInstance();
+    final SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     return sharedPreferences.get('token');
   }
 
   Future<void> setToken(String token) async {
-    sharedPreferences = await SharedPreferences.getInstance();
+    final SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     sharedPreferences.setString('token', token);
   }
 
 
   Future<int> getUserId() async {
-    sharedPreferences = await SharedPreferences.getInstance();
+    final SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     return sharedPreferences.getInt('id');
   }
 
   Future<void> setUserId(int id) async {
-    sharedPreferences = await SharedPreferences.getInstance();
+    final SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     sharedPreferences.setInt('id', id);
   }
 
 
   Future<List<String>> getUser() async {
-    sharedPreferences = await SharedPreferences.getInstance();
+    final SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     return sharedPreferences.getStringList('user');
   }
 
   Future<void> setUser(String name, String surname, String email) async {
-    sharedPreferences = await SharedPreferences.getInstance();
+    final SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     sharedPreferences.setStringList('user', [name, surname, email]);
+  }
+
+
+  Future<bool> isLog() async {
+    final SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    return sharedPreferences.getBool('isLogged');
+  }
+
+  Future<void> setLog(bool log) async {
+    final SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    sharedPreferences.setBool('isLogged', log);
+  }
+
+  Future<void> logout() async {
+    final SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    sharedPreferences.setBool('isLogged', false);
   }
 
 }
