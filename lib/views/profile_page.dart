@@ -88,6 +88,20 @@ class _ProfileState extends State<Profile> {
                 height: 10,
               ),
 
+              FlatButton.icon(
+                onPressed: () async {
+                  chartApi.logout();
+                  Navigator.pushReplacementNamed(context, '/');
+                },
+                icon: Icon(Icons.logout),
+                label: Text('Logout'),
+                color: Colors.black.withOpacity(0.2),
+              ),
+
+              SizedBox(
+                height: 10,
+              ),
+
               Padding(
                 padding: EdgeInsets.only(left: 10, right: 10, bottom: 5),
                 child: BooksReservedReturned(true)
