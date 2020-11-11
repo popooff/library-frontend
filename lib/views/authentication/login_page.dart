@@ -37,7 +37,7 @@ class _LoginPageState extends State<LoginPage> {
   @override
   void initState() {
     userApi = UserApi();
-    emailController = TextEditingController(text: widget.user.email);
+    emailController = TextEditingController(text: (widget.user == null) ? "": widget.user.email);
     passwordController = TextEditingController();
     super.initState();
   }
