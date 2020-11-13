@@ -4,7 +4,6 @@ import 'package:library_frontend/services/rest_api/book_api.dart';
 import 'package:library_frontend/views/book_description.dart';
 
 
-// TODO aggiunge ingrandimento della copertina al tap di essa.
 class Search extends StatefulWidget {
 
   @override
@@ -15,14 +14,25 @@ class _SearchState extends State<Search> {
 
   var searching;
   BookApi bookApi;
-  List<Book> books;
+  List<Book> officialBooks = [];
+  List<Book> booksForFilter = [];
 
 
   @override
   void initState() {
     searching = TextEditingController();
     bookApi = BookApi();
+    getBooks();
     super.initState();
+  }
+
+  void getBooks() async {
+    List<Book> _books = await bookApi.getBooks();
+
+    setState(() {
+      officialBooks = _books;
+      // booksForFilter = _books;
+    });
   }
 
   @override
@@ -47,12 +57,9 @@ class _SearchState extends State<Search> {
                         border: OutlineInputBorder(),
                         suffixIcon: Icon(Icons.search)
                     ),
-                    onTap: () async {
-                      books = await bookApi.getBooks();
-                    },
-                    onSubmitted: (value) {
+                    onChanged: (value) {
                       setState(() {
-                        books = books.where((element) =>
+                        booksForFilter = officialBooks.where((element) =>
                           (element.title.toLowerCase().contains(value.toLowerCase())
                               || element.author.toString().toLowerCase().contains(value.toLowerCase()))
                         ).toList();
@@ -64,7 +71,7 @@ class _SearchState extends State<Search> {
                 Expanded(
                   child: ListView.builder(
                       physics: BouncingScrollPhysics(),
-                      itemCount: books == null ? 0 : books.length,
+                      itemCount: booksForFilter.length,
                       itemBuilder: (context, index) {
 
                         return Card(
@@ -74,13 +81,26 @@ class _SearchState extends State<Search> {
                           ),
 
                           child: ListTile(
-                            title: Text('${books[index].title}'),
-                            subtitle: Text('${books[index].author}'),
-                            leading: Image.network('${bookApi.urlServer}/download/${books[index].cover}'),
+                            title: Text(
+                              '${booksForFilter[index].title}',
+                              style: TextStyle(
+                                color: Colors.black.withOpacity(0.6),
+                                fontSize: 16,
+                                fontWeight: FontWeight.w700
+                              ),
+                            ),
+                            subtitle: Text(
+                              '${booksForFilter[index].author}',
+                              style: TextStyle(
+                                color: Colors.black54,
+                                fontSize: 16,
+                                fontWeight: FontWeight.w300
+                              ),
+                            ),
                             onTap: () {
                               Navigator.push(
                                   context,
-                                  MaterialPageRoute(builder: (_) => BookDescription(book: books[index]))
+                                  MaterialPageRoute(builder: (_) => BookDescription(book: booksForFilter[index]))
                               );
                             },
                           ),
