@@ -31,72 +31,105 @@ class _BookDescriptionState extends State<BookDescription> {
   Widget build(BuildContext context) {
 
     return Scaffold(
+      backgroundColor: Colors.white,
+      body: CustomScrollView(
+        physics: BouncingScrollPhysics(),
+        slivers: [
 
-      body: Container(
-          child: SingleChildScrollView(
-            physics: BouncingScrollPhysics(),
-            child: SafeArea(
-              child: Padding(
-                padding: EdgeInsets.fromLTRB(10, 20, 10, 10),
-                child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-
-                      Center(
-                        child: Text(
-                            'Book Info',
-                            style: TextStyle(
-                              color: Colors.black,
-                              fontWeight: FontWeight.bold,
-                              letterSpacing: 1,
-                              fontSize: 20,
-                            )
-                        ),
-                      ),
-
-                      SizedBox(height: 10),
-
-                      Text(
-                          'Autore: ${widget.book.author}',
-                          style: TextStyle(
-                            color: Colors.grey,
-                            fontSize: 16,
-                          )
-                      ),
-
-                      Text(
-                          'Genere: ${widget.book.kind}',
-                          style: TextStyle(
-                            color: Colors.grey,
-                            fontSize: 16,
-                          )
-                      ),
-
-                      SizedBox(height: 10),
-
-                      Text(
-                        'Trama: ${widget.book.plot}',
-                        textAlign: TextAlign.justify,
-                        style: TextStyle(
-                          color: Colors.black45,
-                          fontSize: 16,
-                        ),
-                      ),
-
-                      SizedBox(height: 20),
-
-                      Text(
-                        'Disponibili: ${widget.book.quantity}',
-                        style: TextStyle(
-                          color: Colors.black.withOpacity(0.6),
-                          fontWeight: FontWeight.bold,
-                          fontSize: 17,
-                        ),
-                      ),
-                    ]),
+          SliverAppBar(
+            backgroundColor: Colors.white,
+            expandedHeight: 500,
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.vertical(bottom: Radius.circular(40))
+            ),
+            flexibleSpace: FlexibleSpaceBar(
+              background: ClipRRect(
+                borderRadius: BorderRadius.vertical(bottom: Radius.circular(40)),
+                child: Image.network(
+                  '${reservationApi.urlServer}/download/${widget.book.cover}',
+                  fit: BoxFit.cover,
+                ),
               ),
             ),
+          ),
+
+          SliverList(
+              delegate: SliverChildListDelegate([
+
+                SizedBox(
+                  height: 5,
+                ),
+
+                Padding(
+                  padding: EdgeInsets.only(left: 10, right: 10),
+                  child: Center(
+                    child: Text(
+                        'Book Info',
+                        style: TextStyle(
+                          color: Colors.black,
+                          fontWeight: FontWeight.bold,
+                          letterSpacing: 1,
+                          fontSize: 20,
+                        )
+                    ),
+                  ),
+                ),
+
+                SizedBox(height: 10),
+
+                Padding(
+                  padding: EdgeInsets.only(left: 10, right: 10),
+                  child: Text(
+                      'Autore: ${widget.book.author}',
+                      style: TextStyle(
+                        color: Colors.grey,
+                        fontSize: 16,
+                      )
+                  ),
+                ),
+
+                Padding(
+                  padding: EdgeInsets.only(left: 10, right: 10),
+                  child: Text(
+                      'Genere: ${widget.book.kind}',
+                      style: TextStyle(
+                        color: Colors.grey,
+                        fontSize: 16,
+                      )
+                  ),
+                ),
+
+                SizedBox(height: 10),
+
+                Padding(
+                  padding: EdgeInsets.only(left: 10, right: 10),
+                  child: Text(
+                    'Trama: ${widget.book.plot}',
+                    textAlign: TextAlign.justify,
+                    style: TextStyle(
+                      color: Colors.black45,
+                      fontSize: 16,
+                    ),
+                  ),
+                ),
+
+                SizedBox(height: 20),
+
+                Padding(
+                  padding: EdgeInsets.only(left: 10, right: 10),
+                  child: Text(
+                    'Disponibili: ${widget.book.quantity}',
+                    style: TextStyle(
+                      color: Colors.black.withOpacity(0.6),
+                      fontWeight: FontWeight.bold,
+                      fontSize: 17,
+                    ),
+                  ),
+                ),
+              ])
           )
+
+        ]
       ),
 
       floatingActionButton: FloatingActionButton.extended(
