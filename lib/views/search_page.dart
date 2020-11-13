@@ -27,11 +27,10 @@ class _SearchState extends State<Search> {
   }
 
   void getBooks() async {
-    List<Book> _books = await bookApi.getBooks();
+    List<Book> _books = await bookApi.getBooks() ?? [];
 
     setState(() {
       officialBooks = _books;
-      // booksForFilter = _books;
     });
   }
 
