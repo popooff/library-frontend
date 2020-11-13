@@ -188,7 +188,7 @@ class _RegisterPageState extends State<RegisterPage> {
 
                             } else {
                               showDialog(
-                                  context: null,
+                                  context: context,
                                   builder: (_) => MyAlertDialog(
                                       content: 'Registrazione non riuscita!'
                                   )
