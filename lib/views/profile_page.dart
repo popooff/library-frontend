@@ -515,15 +515,28 @@ class _BooksReservedReturnedState extends State<BooksReservedReturned> {
                             scrollDirection: Axis.horizontal,
                             children: [
 
-                              for (int index = 0; index < data.data.length / 3; index++)
+                              for (int index = 0; index < data.data.length; index++)
                                 Padding(
-                                  padding: EdgeInsets.only(left: 2, right: 2),
-                                  child: Container(
-                                      child: ClipRRect(
-                                        borderRadius: BorderRadius.circular(5),
-                                        child: Image.network('${reservationApi.urlServer}/download/${data.data[index].book.cover}'),
-                                      )
-                                  ),
+                                    padding: EdgeInsets.only(left: 2, right: 2),
+                                    child: GestureDetector(
+                                      child: Container(
+                                          child: ClipRRect(
+                                            borderRadius: BorderRadius.circular(5),
+                                            child: Image.network('${reservationApi.urlServer}/download/${data.data[index].book.cover}'),
+                                          )
+                                      ),
+                                      onTap: () {
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) => widget.or ? BookedPage() : ReturnedPage(),
+                                            settings: RouteSettings(
+                                              arguments: data.data,
+                                            ),
+                                          ),
+                                        );
+                                      },
+                                    )
                                 )
                             ],
                           )
