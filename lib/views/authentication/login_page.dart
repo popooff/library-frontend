@@ -156,7 +156,7 @@ class _LoginPageState extends State<LoginPage> {
                         );
 
                         if (logged) {
-                          Navigator.pushReplacementNamed(context, '/initial');
+                          Navigator.pushNamedAndRemoveUntil(context, '/initial', (route) => false);
                           userApi.setLog(true);
 
                         } else {
