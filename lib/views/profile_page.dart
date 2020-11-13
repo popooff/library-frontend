@@ -16,7 +16,6 @@ class Profile extends StatefulWidget {
   _ProfileState createState() => _ProfileState();
 }
 
-// TODO trovare il modo di stampare i dati dell'utente.
 class _ProfileState extends State<Profile> {
 
   ChartApi chartApi;
@@ -30,7 +29,11 @@ class _ProfileState extends State<Profile> {
   }
 
   void getCredential() async {
-    user = await chartApi.getUser();
+      List<String> _user = await chartApi.getUser();
+
+      setState(() {
+        user = _user;
+      });
   }
 
 
