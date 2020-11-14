@@ -87,18 +87,15 @@ class _ProfileState extends State<Profile> {
                 ),
               ),
 
-              SizedBox(
-                height: 10,
-              ),
-
-              FlatButton.icon(
+              FlatButton(
+                height: 30,
+                minWidth: MediaQuery.of(context).size.width - 20,
                 onPressed: () async {
                   chartApi.logout();
                   Navigator.pushReplacementNamed(context, '/');
                 },
-                icon: Icon(Icons.logout),
-                label: Text('Logout'),
-                color: Colors.black.withOpacity(0.2),
+                child: Text('Logout'),
+                color: Colors.black.withOpacity(0.1),
               ),
 
               SizedBox(
@@ -517,29 +514,15 @@ class _BooksReservedReturnedState extends State<BooksReservedReturned> {
 
                               for (int index = 0; index < data.data.length; index++)
                                 Padding(
-                                    padding: EdgeInsets.only(left: 2, right: 2),
-                                    child: GestureDetector(
-                                      child: Container(
-                                          child: ClipRRect(
-                                            borderRadius: BorderRadius.circular(5),
-                                            child: Image.network('${reservationApi.urlServer}/download/${data.data[index].book.cover}'),
-                                          )
-                                      ),
-                                      onTap: () {
-                                        Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                            builder: (context) => widget.or ? BookedPage() : ReturnedPage(),
-                                            settings: RouteSettings(
-                                              arguments: data.data,
-                                            ),
-                                          ),
-                                        );
-                                      },
-                                    )
+                                  padding: EdgeInsets.only(left: 2, right: 2),
+                                  child: Container(
+                                      child: ClipRRect(
+                                        borderRadius: BorderRadius.circular(5),
+                                        child: Image.network('${reservationApi.urlServer}/download/${data.data[index].book.cover}'),
+                                      )
+                                  ),
                                 )
-                            ],
-                          )
+                            ])
                       )
                     ],
                   );
