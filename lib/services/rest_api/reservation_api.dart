@@ -7,7 +7,6 @@ import 'book_api.dart';
 
 class ReservationApi extends Utils {
 
-  List<Reservation> list = [];
   BookApi bookApi = BookApi();
   Reservation reservation;
   int idUser;
@@ -53,7 +52,7 @@ class ReservationApi extends Utils {
         headers: header
     );
 
-    list.clear();
+    List<Reservation> list = [];
     for (var el in jsonDecode(response.body)['data'][0]) {
 
       var book = await bookApi.getBookById(el['ID']);
@@ -81,7 +80,7 @@ class ReservationApi extends Utils {
         headers: header
     );
 
-    list.clear();
+    List<Reservation> list = [];
     for (var el in jsonDecode(response.body)['data'][0]) {
 
       var book = await bookApi.getBookById(el['Libro']);
