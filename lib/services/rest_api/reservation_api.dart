@@ -53,6 +53,7 @@ class ReservationApi extends Utils {
         headers: header
     );
 
+    list.clear();
     for (var el in jsonDecode(response.body)['data'][0]) {
 
       var book = await bookApi.getBookById(el['ID']);
@@ -80,6 +81,7 @@ class ReservationApi extends Utils {
         headers: header
     );
 
+    list.clear();
     for (var el in jsonDecode(response.body)['data'][0]) {
 
       var book = await bookApi.getBookById(el['Libro']);
