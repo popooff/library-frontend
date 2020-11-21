@@ -19,12 +19,21 @@ class BookDescription extends StatefulWidget {
 class _BookDescriptionState extends State<BookDescription> {
 
   ReservationApi reservationApi;
-
+  String token;
 
   @override
   void initState() {
     reservationApi = ReservationApi();
+    getToken();
     super.initState();
+  }
+
+  void getToken() async {
+    String jwt = await reservationApi.getToken();
+
+    setState(() {
+      token = jwt;
+    });
   }
 
   @override
@@ -47,6 +56,7 @@ class _BookDescriptionState extends State<BookDescription> {
                 borderRadius: BorderRadius.vertical(bottom: Radius.circular(40)),
                 child: Image.network(
                   '${reservationApi.urlServer}/download/${widget.book.cover}',
+                  headers: reservationApi.authHeader(token),
                   fit: BoxFit.cover,
                 ),
               ),

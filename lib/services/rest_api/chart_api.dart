@@ -7,13 +7,15 @@ import 'dart:convert';
 class ChartApi extends Utils {
 
   int userId;
+  String token;
 
 
   Future<List<Chart>> getAllKindUserRead(Future<int> id) async {
     userId = await id;
+    token = await getToken();
     var response = await http.get(
         '$urlServer/grafici/getGeneriUtente/$userId',
-        headers: header
+        headers: authHeader(token)
     );
 
     return List.of(jsonDecode(response.body)['data'][0])
@@ -24,9 +26,10 @@ class ChartApi extends Utils {
 
   Future<List<Chart>> getAllMonthUserRead() async {
     userId = await getUserId();
+    token = await getToken();
     var response = await http.get(
         '$urlServer/grafici/getNumberLibriMese/$userId',
-        headers: header
+        headers: authHeader(token)
     );
 
     return List.of(jsonDecode(response.body)['data'][0])

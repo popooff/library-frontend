@@ -446,12 +446,21 @@ class BooksReservedReturned extends StatefulWidget {
 class _BooksReservedReturnedState extends State<BooksReservedReturned> {
 
   ReservationApi reservationApi;
-
+  String token;
 
   @override
   void initState() {
     reservationApi = ReservationApi();
+    getToken();
     super.initState();
+  }
+
+  void getToken() async {
+    String jwt = await reservationApi.getToken();
+
+    setState(() {
+      token = jwt;
+    });
   }
 
   @override
@@ -518,7 +527,10 @@ class _BooksReservedReturnedState extends State<BooksReservedReturned> {
                                   child: Container(
                                       child: ClipRRect(
                                         borderRadius: BorderRadius.circular(5),
-                                        child: Image.network('${reservationApi.urlServer}/download/${data.data[index].book.cover}'),
+                                        child: Image.network(
+                                          '${reservationApi.urlServer}/download/${data.data[index].book.cover}',
+                                          headers: reservationApi.authHeader(token),
+                                        ),
                                       )
                                   ),
                                 )

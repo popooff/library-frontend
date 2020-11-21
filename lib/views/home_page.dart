@@ -14,12 +14,21 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
 
   BookApi bookApi;
-
+  String token;
 
   @override
   void initState() {
     bookApi = BookApi();
+    getToken();
     super.initState();
+  }
+
+  void getToken() async {
+    String jwt = await bookApi.getToken();
+
+    setState(() {
+      token = jwt;
+    });
   }
 
   @override
@@ -53,7 +62,8 @@ class _HomeState extends State<Home> {
                         borderRadius: BorderRadius.circular(20),
                         child: GestureDetector(
                           child: Image.network(
-                              '${bookApi.urlServer}/download/${data.data[index].cover}'
+                            '${bookApi.urlServer}/download/${data.data[index].cover}',
+                            headers: bookApi.authHeader(token),
                           ),
 
                           onTap: () {

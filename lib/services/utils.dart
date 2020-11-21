@@ -4,17 +4,18 @@ import 'package:shared_preferences/shared_preferences.dart';
 class Utils {
 
   final String urlServer = 'http://82.84.32.209:8090/api';
-  String token;
 
-  Map<String, String> header /*(Future<dynamic> _token) async*/ = {
-    // token = await _token;
+  Map<String, String> authHeader(String token) {
+    Map<String, String> map = {
+      'Accept': 'application/json',
+      'Authorization': token
+    };
 
-    // Map map = {
-      'Accept' : 'application/json',
-      // 'Authorization' : token
-    // };
+    return map;
+  }
 
-    // return map;
+  Map<String, String> header = {
+    'Accept': 'application/json'
   };
 
 

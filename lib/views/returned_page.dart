@@ -13,12 +13,21 @@ class ReturnedPage extends StatefulWidget {
 class _ReturnedPageState extends State<ReturnedPage> {
 
   ReservationApi reservationApi;
-
+  String token;
 
   @override
   void initState() {
     reservationApi = ReservationApi();
+    getToken();
     super.initState();
+  }
+
+  void getToken() async {
+    String jwt = await reservationApi.getToken();
+
+    setState(() {
+      token = jwt;
+    });
   }
 
   @override
@@ -46,7 +55,10 @@ class _ReturnedPageState extends State<ReturnedPage> {
                         subtitle: Text('${data[index].book.kind.toString()}'),
                         leading: CircleAvatar(
                           radius: 30,
-                          backgroundImage: NetworkImage('${reservationApi.urlServer}/download/${data[index].book.cover}'),
+                          backgroundImage: NetworkImage(
+                              '${reservationApi.urlServer}/download/${data[index].book.cover}',
+                              headers: reservationApi.authHeader(token)
+                          ),
                         )
                       ),
 

@@ -22,15 +22,20 @@ class UserApi extends Utils {
       var name = jsonResponse['data'][0]['Nome'];
       var surname = jsonResponse['data'][0]['Cognome'];
       var email = jsonResponse['data'][0]['Email'];
+      var token = jsonResponse['data'][0]['jwt'];
       setCredential(id, name, surname, email);
+      setToken(token);
 
     } else {
       var id = jsonResponse['data']['ID'];
       var name = jsonResponse['data']['Nome'];
       var surname = jsonResponse['data']['Cognome'];
       var email = jsonResponse['data']['Email'];
+      var token = jsonResponse['data']['jwt'];
       setCredential(id, name, surname, email);
+      setToken(token);
     }
+
 
     return (response.statusCode == 200) ? true : false;
   }

@@ -6,11 +6,13 @@ import 'dart:convert';
 
 class BookApi extends Utils {
 
+  String token;
 
   Future<List<Book>> getBooks() async {
+    token = await getToken();
     var response = await http.get(
         '$urlServer/libri/getAll',
-        headers: header
+        headers: authHeader(token)
     );
 
     return List
@@ -21,9 +23,10 @@ class BookApi extends Utils {
 
 
   Future<Book> getBookById(int id) async {
+    token = await getToken();
     var response = await http.get(
         '$urlServer/libri/getBook/$id',
-        headers: header
+        headers: authHeader(token)
     );
 
     return Book.fromJson(jsonDecode(response.body)['data'][0][0]);

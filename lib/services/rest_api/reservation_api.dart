@@ -10,10 +10,12 @@ class ReservationApi extends Utils {
   BookApi bookApi = BookApi();
   Reservation reservation;
   int idUser;
+  String token;
 
 
   Future<bool> addReservation(Future<int> userId, int idBook) async {
     idUser = await userId;
+    token = await getToken();
     reservation = Reservation(
         idUser: idUser,
         idBook: idBook,
@@ -22,7 +24,7 @@ class ReservationApi extends Utils {
 
     var response = await http.post(
         '$urlServer/prenotazioni/addPrenotazione',
-        headers: header,
+        headers: authHeader(token),
         body: reservation.bookedJson()
     );
 
@@ -31,13 +33,14 @@ class ReservationApi extends Utils {
 
 
   Future<bool> returnBook(int idReservation) async {
+    token = await getToken();
     reservation = Reservation(
         dateReturned: DateTime.parse(DateTime.now().toString().split(' ')[0])
     );
 
     var response = await http.put(
         '$urlServer/prenotazioni/returnBook/$idReservation',
-        headers: header,
+        headers: authHeader(token),
         body: reservation.returnedJson()
     );
 
@@ -47,9 +50,10 @@ class ReservationApi extends Utils {
 
   Future<List<Reservation>> getAllBooksReservation(Future<int> userId) async {
     idUser = await userId;
+    token = await getToken();
     var response = await http.get(
         '$urlServer/prenotazioni/getBookPrenotations/$idUser',
-        headers: header
+        headers: authHeader(token)
     );
 
     List<Reservation> list = [];
@@ -75,9 +79,10 @@ class ReservationApi extends Utils {
 
   Future<List<Reservation>> getBooksToBeReturned(Future<int> userId) async {
     idUser = await userId;
+    token = await getToken();
     var response = await http.get(
         '$urlServer/prenotazioni/daRestituire/$idUser',
-        headers: header
+        headers: authHeader(token)
     );
 
     List<Reservation> list = [];
