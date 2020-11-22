@@ -136,6 +136,10 @@ class _BookDescriptionState extends State<BookDescription> {
                     ),
                   ),
                 ),
+
+                SizedBox(
+                  height: 10,
+                )
               ])
           )
 
@@ -152,10 +156,15 @@ class _BookDescriptionState extends State<BookDescription> {
             );
 
             if (reserved) {
-              Navigator.pushNamedAndRemoveUntil(context, '/initial', (route) => false);
+
+              setState(() {
+                widget.book.quantity--;
+              });
+
               showDialog(
                   context: context,
                   builder: (_) => MyAlertDialog(
+                    parent: context,
                     content: 'Prenotazione effettuata con successo!',
                   )
               );
