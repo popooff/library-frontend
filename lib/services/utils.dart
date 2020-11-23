@@ -3,7 +3,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class Utils {
 
-  final String urlServer = 'http://82.84.32.209:8090/api';
+  final String urlServer = 'http://progettopawm.ns0.it:8090/api';
 
   Map<String, String> authHeader(String token) {
     Map<String, String> map = {
