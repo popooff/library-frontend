@@ -154,18 +154,40 @@ class CakeKindChart extends StatefulWidget {
 
 class _CakeKindChartState extends State<CakeKindChart> {
 
-  final Map<String, Color> kindColor = {
-    'Autobografico': Colors.deepPurple,
-    'Fantascienza': Colors.red,
-    'Fantasy': Colors.pink,
-    'Fiaba': Colors.yellow,
-    'Horror': Colors.black,
-    'Mystery': Colors.green,
-    'Narrativo': Colors.deepOrangeAccent,
-    'Romanzo': Colors.indigo,
-    'Saggio': Colors.teal,
-    'Thriller': Colors.brown,
-  };
+  final List<Color> kindColor = [
+    Colors.green.shade900,
+    Colors.green.shade500,
+    Colors.green.shade200,
+
+    Colors.black,
+    Colors.grey.shade800,
+    Colors.grey.shade500,
+
+    Colors.blue.shade900,
+    Colors.blue.shade500,
+    Colors.blue.shade200,
+
+    Colors.pink.shade900,
+    Colors.pink.shade500,
+    Colors.pink.shade200,
+
+    Colors.red.shade900,
+    Colors.red.shade600,
+    Colors.red.shade400,
+
+    Colors.brown.shade900,
+    Colors.brown.shade500,
+    Colors.brown.shade200,
+
+    Colors.yellow.shade700,
+    Colors.yellow.shade300,
+
+    Colors.lightGreenAccent.shade700,
+    Colors.lightGreenAccent.shade200,
+
+    Colors.indigo,
+    Colors.deepOrangeAccent,
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -184,6 +206,7 @@ class _CakeKindChartState extends State<CakeKindChart> {
                 return NotFound('Grafico dei generi più letti non disponibile!');
               }
 
+              kindColor..shuffle();
               return AspectRatio(
                 aspectRatio: 1.5,
                 child: Card(
@@ -207,7 +230,7 @@ class _CakeKindChartState extends State<CakeKindChart> {
                                 sections: List.generate(data.data.length, (i) {
 
                                   return PieChartSectionData(
-                                    color: kindColor[data.data[i].kind],
+                                    color: kindColor[i],
                                     value: data.data[i].bookNumber.toDouble(),
                                     title: '${data.data[i].bookNumber}',
                                     radius: 55,
@@ -233,7 +256,7 @@ class _CakeKindChartState extends State<CakeKindChart> {
                                         bottom: 2
                                     ),
                                     child: ChartTextIndicator(
-                                      backgroundColor: kindColor['${data.data[count].kind}'],
+                                      backgroundColor: kindColor[count],
                                       text: '${data.data[count].kind}',
                                     ),
                                   ),
