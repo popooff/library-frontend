@@ -75,7 +75,8 @@ class _HomeState extends State<Home> {
                             );},
                         ),
                       ),
-                    );},
+                    );
+                  },
 
                   staggeredTileBuilder: (int index) => StaggeredTile.fit(2)
               );

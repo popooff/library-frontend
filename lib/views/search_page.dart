@@ -89,7 +89,7 @@ class _SearchState extends State<Search> {
                               ),
                             ),
                             subtitle: Text(
-                              '${booksForFilter[index].author}',
+                              '${booksForFilter[index].getAuthors()}',
                               style: TextStyle(
                                 color: Colors.black54,
                                 fontSize: 16,

@@ -71,7 +71,7 @@ class _BookedPageState extends State<BookedPage> {
                           ),
 
                           Text(
-                            "Autore: ${data[index].book.author.toString().substring(1, data[index].book.author.toString().length - 1)}",
+                            "Autore: ${data[index].book.getAuthors()}",
                             style: TextStyle(
                                 fontSize: 16,
                                 color: Colors.black.withOpacity(0.70)),

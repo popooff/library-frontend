@@ -90,7 +90,7 @@ class _BookDescriptionState extends State<BookDescription> {
                 Padding(
                   padding: EdgeInsets.only(left: 10, right: 10),
                   child: Text(
-                      'Autore: ${widget.book.author}',
+                      'Autore: ${widget.book.getAuthors()}',
                       style: TextStyle(
                         color: Colors.grey,
                         fontSize: 16,

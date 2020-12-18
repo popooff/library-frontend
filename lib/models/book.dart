@@ -32,4 +32,8 @@ class Book {
     );
   }
 
+  String getAuthors() {
+    return author.join(', ');
+  }
+
 }
