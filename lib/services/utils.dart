@@ -26,6 +26,7 @@ class Utils {
 
   Future<void> setToken(String token) async {
     final SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    sharedPreferences.remove('token');
     sharedPreferences.setString('token', token);
   }
 
