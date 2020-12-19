@@ -1,4 +1,5 @@
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:http/http.dart' as http;
 
 
 class Utils {
@@ -17,6 +18,18 @@ class Utils {
   Map<String, String> header = {
     'Accept': 'application/json'
   };
+
+
+  Future<bool> isValid() async {
+    String token = await getToken();
+    bool valid = await isLog();
+    var response = await http.get(
+      '$urlServer/download/cappuccettorosso.jpg',
+      headers: authHeader(token)
+    );
+
+    return response.statusCode == 401 && valid;
+  }
 
 
   Future<String> getToken() async {

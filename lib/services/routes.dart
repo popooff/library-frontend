@@ -1,7 +1,5 @@
+import 'package:library_frontend/views/load_page.dart';
 import 'package:flutter/material.dart';
-import 'package:library_frontend/main.dart';
-import 'package:library_frontend/views/authentication/login_page.dart';
-import 'package:library_frontend/views/authentication/registration_page.dart';
 
 
 class Routes {
@@ -11,15 +9,7 @@ class Routes {
     switch (settings.name) {
 
       case '/':
-        return MaterialPageRoute(builder: (_) => LoginPage());
-        break;
-
-      case '/register':
-        return MaterialPageRoute(builder: (_) => RegisterPage());
-        break;
-
-      case '/initial':
-        return MaterialPageRoute(builder: (_) => Initial());
+        return MaterialPageRoute(builder: (_) => LoadPage());
         break;
 
       default:

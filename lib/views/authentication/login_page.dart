@@ -1,8 +1,10 @@
-import 'package:flutter/material.dart';
+import 'package:library_frontend/views/authentication/registration_page.dart';
 import 'package:library_frontend/services/rest_api/user_api.dart';
+import 'package:library_frontend/views/initial_view.dart';
 import 'package:library_frontend/widgets/my_alert.dart';
-import '../../models/user.dart';
+import 'package:flutter/material.dart';
 import 'package:blobs/blobs.dart';
+import '../../models/user.dart';
 
 
 class LoginPage extends StatefulWidget {
@@ -39,14 +41,7 @@ class _LoginPageState extends State<LoginPage> {
     userApi = UserApi();
     emailController = TextEditingController(text: (widget.user == null) ? "": widget.user.email);
     passwordController = TextEditingController();
-    autoLogin();
     super.initState();
-  }
-
-  Future<void> autoLogin() async {
-    if (await userApi.isLog() ?? false) {
-      Navigator.pushReplacementNamed(context, '/initial');
-    }
   }
 
   @override
@@ -148,21 +143,27 @@ class _LoginPageState extends State<LoginPage> {
                           log = true;
                         });
 
-                        bool logged = await userApi.loginUser(
+                        List<dynamic> logged = await userApi.loginUser(
                             User(
                                 email: emailController.text,
                                 password: userApi.sha256Encrypt(passwordController.text)
                             )
                         );
 
-                        if (logged) {
-                          Navigator.pushNamedAndRemoveUntil(context, '/initial', (route) => false);
+                        if (logged[0]) {
+                          Navigator.pushAndRemoveUntil(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (_) => Initial()
+                              ), (route) => false
+                          );
+
                           userApi.setLog(true);
 
                         } else {
 
                           setState(() {
-                            log = logged;
+                            log = logged[0];
                           });
 
                           showDialog(
@@ -192,7 +193,10 @@ class _LoginPageState extends State<LoginPage> {
                             Text('Non hai un account?'),
                             FlatButton(
                                 onPressed: () {
-                                  Navigator.pushNamed(context, '/register');
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(builder: (_) => RegisterPage())
+                                  );
                                 },
                                 child: Text('Registrati')
                             )

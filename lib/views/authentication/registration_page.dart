@@ -1,8 +1,8 @@
-import 'package:flutter/material.dart';
-import 'package:library_frontend/models/user.dart';
-import 'package:library_frontend/services/rest_api/user_api.dart';
 import 'package:library_frontend/views/authentication/login_page.dart';
+import 'package:library_frontend/services/rest_api/user_api.dart';
 import 'package:library_frontend/widgets/my_alert.dart';
+import 'package:library_frontend/models/user.dart';
+import 'package:flutter/material.dart';
 import 'package:blobs/blobs.dart';
 
 
@@ -180,10 +180,7 @@ class _RegisterPageState extends State<RegisterPage> {
                             if (registered) {
 
                               Navigator.of(context).pushReplacement(
-                                  MaterialPageRoute(
-                                      builder: (BuildContext context) {
-                                        return LoginPage(user: user);
-                                      })
+                                  MaterialPageRoute(builder: (_) => LoginPage(user: user))
                               );
 
                             } else {
