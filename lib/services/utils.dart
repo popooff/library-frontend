@@ -22,7 +22,7 @@ class Utils {
 
   Future<bool> isValid() async {
     String token = await getToken();
-    bool valid = await isLog();
+    bool valid = await isLog() ?? false;
     var response = await http.get(
       '$urlServer/download/empty.png',
       headers: authHeader(token)
