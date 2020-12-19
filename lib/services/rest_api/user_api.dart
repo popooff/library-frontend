@@ -7,8 +7,7 @@ import 'dart:convert';
 
 class UserApi extends Utils {
 
-  Future<bool> loginUser(User user) async {
-
+  Future<List<dynamic>> loginUser(User user) async {
     var response = await http.post(
         '$urlServer/authentication/userLogin',
         headers: header,
@@ -17,27 +16,16 @@ class UserApi extends Utils {
 
     var jsonResponse = jsonDecode(response.body);
 
-    if (jsonResponse['data'] is List) {
-      var id = jsonResponse['data'][0]['ID'];
-      var name = jsonResponse['data'][0]['Nome'];
-      var surname = jsonResponse['data'][0]['Cognome'];
-      var email = jsonResponse['data'][0]['Email'];
-      var token = jsonResponse['data'][0]['jwt'];
-      setCredential(id, name, surname, email);
-      setToken(token);
+    List<dynamic> list = [];
+    list.add(response.statusCode == 200);
+    list.add(jsonResponse['data']['ID']);
+    list.add(jsonResponse['data']['Nome']);
+    list.add(jsonResponse['data']['Cognome']);
+    list.add(jsonResponse['data']['Email']);
+    list.add(jsonResponse['data']['jwt']);
+    setCredential(list);
 
-    } else {
-      var id = jsonResponse['data']['ID'];
-      var name = jsonResponse['data']['Nome'];
-      var surname = jsonResponse['data']['Cognome'];
-      var email = jsonResponse['data']['Email'];
-      var token = jsonResponse['data']['jwt'];
-      setCredential(id, name, surname, email);
-      setToken(token);
-    }
-
-
-    return (response.statusCode == 200) ? true : false;
+    return list;
   }
 
 
@@ -53,9 +41,10 @@ class UserApi extends Utils {
   }
 
 
-  void setCredential(int id, String name, String surname, String email) {
-    setUserId(id);
-    setUser(name, surname, email);
+  void setCredential(List<dynamic> list) {
+    setUserId(list[1]);
+    setUser(list[2], list[3], list[4]);
+    setToken(list[5]);
   }
 
 
