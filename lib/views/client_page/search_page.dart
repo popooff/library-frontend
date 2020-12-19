@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:library_frontend/models/book.dart';
 import 'package:library_frontend/services/rest_api/book_api.dart';
-import 'package:library_frontend/views/book_description.dart';
+import 'package:library_frontend/views/client_page/info_page/book_description.dart';
 
 
 class Search extends StatefulWidget {

@@ -1,7 +1,7 @@
 import 'package:library_frontend/widgets/library_bottom_nav_bar.dart';
-import 'package:library_frontend/views/profile_page.dart';
-import 'package:library_frontend/views/search_page.dart';
-import 'package:library_frontend/views/home_page.dart';
+import 'package:library_frontend/views/client_page/profile_page.dart';
+import 'package:library_frontend/views/client_page/search_page.dart';
+import 'package:library_frontend/views/client_page/home_page.dart';
 import 'package:flutter/material.dart';
 
 
