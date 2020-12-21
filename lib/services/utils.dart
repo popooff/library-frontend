@@ -24,7 +24,7 @@ class Utils {
     String token = await getToken();
     bool valid = await isLog() ?? false;
     var response = await http.get(
-      '$urlServer/download/empty.png',
+      '$urlServer/authentication/test',
       headers: authHeader(token)
     );
 
