@@ -169,10 +169,10 @@ class _RegisterPageState extends State<RegisterPage> {
                           onPressed: () async {
 
                             var user = User(
-                                name: nameController.text,
-                                surname: surnameController.text,
-                                email: emailController.text,
-                                password: userApi.sha256Encrypt(passwordController.text)
+                                name: nameController.text.trim(),
+                                surname: surnameController.text.trim(),
+                                email: emailController.text.trim(),
+                                password: userApi.sha256Encrypt(passwordController.text.trim())
                             );
 
                             bool registered = await userApi.registerUser(user);

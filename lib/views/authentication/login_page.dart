@@ -145,8 +145,8 @@ class _LoginPageState extends State<LoginPage> {
 
                         List<dynamic> logged = await userApi.loginUser(
                             User(
-                                email: emailController.text,
-                                password: userApi.sha256Encrypt(passwordController.text)
+                                email: emailController.text.trim(),
+                                password: userApi.sha256Encrypt(passwordController.text.trim())
                             )
                         );
 
