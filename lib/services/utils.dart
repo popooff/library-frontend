@@ -28,7 +28,14 @@ class Utils {
       headers: authHeader(token)
     );
 
-    return response.statusCode == 401 && valid;
+    if (response.statusCode == 401) {
+      return true;
+
+    } else if (!valid) {
+      return true;
+    }
+
+    return false;
   }
 
 

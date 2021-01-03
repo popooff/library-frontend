@@ -32,10 +32,10 @@ class _LoadPageState extends State<LoadPage> {
         } else {
 
           if (data.data) {
-            return Initial();
+            return LoginPage();
 
           } else {
-            return LoginPage();
+            return Initial();
           }
         }
 
