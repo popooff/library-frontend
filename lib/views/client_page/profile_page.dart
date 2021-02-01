@@ -286,6 +286,13 @@ class LineMonthChart extends StatefulWidget {
 class _LineMonthChartState extends State<LineMonthChart> {
 
   ChartApi chartApi;
+  int year = DateTime.now().year;
+  var list = [
+    DateTime.now().year,
+    DateTime.now().year - 1,
+    DateTime.now().year - 2,
+    DateTime.now().year - 3,
+  ];
 
   @override
   void initState() {
@@ -298,159 +305,202 @@ class _LineMonthChartState extends State<LineMonthChart> {
   Widget build(BuildContext context) {
 
     return Container(
-        child: FutureBuilder(
-            future: chartApi.getAllMonthUserRead(),
-            builder: (context, AsyncSnapshot<List<Chart>> data) {
+        height: 400,
+        child: ListView(
+            padding: EdgeInsets.only(left: 5, right: 5, top: 10),
+            children: [
 
-              if (data.data == null) {
-                return Center(child: CircularProgressIndicator());
+              Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
 
-              } else {
+                  Text(
+                    'Anno?',
+                    style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.w500,
+                        color: Colors.black.withOpacity(0.6)
+                    ),
+                  ),
 
-                if (data.data != null && data.data.isEmpty) {
-                  return NotFound('Grafico delle prenotazioni mensili non\ndisponibile!');
-                }
+                  SizedBox(
+                    width: 5,
+                  ),
 
-                int maxY = data.data.map((e) => e.bookNumber).toList().reduce(max);
+                  DropdownButton(
+                    value: year,
+                    items: list.map((value) {
+                      return DropdownMenuItem(
+                        value: value,
+                        child: Text(value.toString(), style: TextStyle(color: Colors.black54),),
+                      );
+                    }).toList(),
+                    onChanged: (yearSelected) {
+                      setState(() {
+                        year = yearSelected;
+                      });
+                    },
+                  ),
+                ],
+              ),
 
-                return Stack(
-                    children: [
-                      AspectRatio(
-                          aspectRatio: 1.5,
-                          child: Container(
-                              decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.all(
-                                    Radius.circular(10),
-                                  ),
-                                  color: Colors.white70,
-                                  border: Border.all(color: Colors.black38)
-                              ),
-                              child: Padding(
-                                padding: const EdgeInsets.only(
-                                    right: 10,
-                                    left: 15,
-                                    top: 15,
-                                    bottom: 5
-                                ),
+              Container(
+                  child: FutureBuilder(
+                      future: chartApi.getAllMonthUserRead(year),
+                      builder: (context, AsyncSnapshot<List<Chart>> data) {
 
-                                child: LineChart(LineChartData(
-                                    gridData: FlGridData(
-                                      show: true,
-                                      drawVerticalLine: true,
-                                      getDrawingHorizontalLine: (value) {
-                                        return FlLine(
-                                          color: Colors.black.withOpacity(0.5),
-                                          strokeWidth: 0.5,
-                                        );
-                                      },
-                                      getDrawingVerticalLine: (value) {
-                                        return FlLine(
-                                          color: Colors.black.withOpacity(0.5),
-                                          strokeWidth: 0.5,
-                                        );
-                                      },
-                                    ),
+                        if (data.data == null) {
+                          return Center(child: CircularProgressIndicator());
 
-                                    titlesData: FlTitlesData(
-                                      show: true,
-                                      bottomTitles: SideTitles(
-                                        showTitles: true,
-                                        reservedSize: 20,
-                                        getTextStyles: (value) => const TextStyle(
-                                            color: Color(0xff68737d),
-                                            fontSize: 11
+                        } else {
+
+                          if (data.data != null && data.data.isEmpty) {
+                            return NotFound('Grafico delle prenotazioni mensili non\ndisponibile!');
+                          }
+
+                          int maxY = data.data.map((e) => e.bookNumber).toList().reduce(max);
+
+                          return Stack(
+                              children: [
+                                AspectRatio(
+                                    aspectRatio: 1.5,
+                                    child: Container(
+                                        decoration: BoxDecoration(
+                                            borderRadius: BorderRadius.all(
+                                              Radius.circular(10),
+                                            ),
+                                            color: Colors.white70,
+                                            border: Border.all(color: Colors.black38)
                                         ),
+                                        child: Padding(
+                                          padding: const EdgeInsets.only(
+                                              right: 10,
+                                              left: 15,
+                                              top: 15,
+                                              bottom: 5
+                                          ),
 
-                                        getTitles: (value) {
-                                          switch (value.toInt()) {
-                                            case 1:
-                                              return 'Gen';
-                                            case 2:
-                                              return 'Feb';
-                                            case 3:
-                                              return 'Mar';
-                                            case 4:
-                                              return 'Apr';
-                                            case 5:
-                                              return 'Mar';
-                                            case 6:
-                                              return 'Giu';
-                                            case 7:
-                                              return 'Lug';
-                                            case 8:
-                                              return 'Ago';
-                                            case 9:
-                                              return 'Set';
-                                            case 10:
-                                              return 'Ott';
-                                            case 11:
-                                              return 'Nov';
-                                            case 12:
-                                              return 'Dic';
-                                          }
-                                          return '';
-                                        },
-                                        margin: 5,
-                                      ),
-                                      leftTitles: SideTitles(
-                                        showTitles: true,
-                                        getTextStyles: (value) => const TextStyle(
-                                          color: Color(0xff67727d),
-                                          fontSize: 11,
-                                        ),
-                                        getTitles: (value) {
-                                          return '${value.toInt()}';
-                                        },
-                                        reservedSize: 5,
-                                        margin: 8,
-                                      ),
-                                    ),
+                                          child: LineChart(LineChartData(
+                                              gridData: FlGridData(
+                                                show: true,
+                                                drawVerticalLine: true,
+                                                getDrawingHorizontalLine: (value) {
+                                                  return FlLine(
+                                                    color: Colors.black.withOpacity(0.5),
+                                                    strokeWidth: 0.5,
+                                                  );
+                                                },
+                                                getDrawingVerticalLine: (value) {
+                                                  return FlLine(
+                                                    color: Colors.black.withOpacity(0.5),
+                                                    strokeWidth: 0.5,
+                                                  );
+                                                },
+                                              ),
 
-                                    borderData: FlBorderData(
-                                        show: true,
-                                        border: Border.all(
-                                            color: Colors.black,
-                                            width: 0.5
+                                              titlesData: FlTitlesData(
+                                                show: true,
+                                                bottomTitles: SideTitles(
+                                                  showTitles: true,
+                                                  reservedSize: 20,
+                                                  getTextStyles: (value) => const TextStyle(
+                                                      color: Color(0xff68737d),
+                                                      fontSize: 11
+                                                  ),
+
+                                                  getTitles: (value) {
+                                                    switch (value.toInt()) {
+                                                      case 1:
+                                                        return 'Gen';
+                                                      case 2:
+                                                        return 'Feb';
+                                                      case 3:
+                                                        return 'Mar';
+                                                      case 4:
+                                                        return 'Apr';
+                                                      case 5:
+                                                        return 'Mar';
+                                                      case 6:
+                                                        return 'Giu';
+                                                      case 7:
+                                                        return 'Lug';
+                                                      case 8:
+                                                        return 'Ago';
+                                                      case 9:
+                                                        return 'Set';
+                                                      case 10:
+                                                        return 'Ott';
+                                                      case 11:
+                                                        return 'Nov';
+                                                      case 12:
+                                                        return 'Dic';
+                                                    }
+                                                    return '';
+                                                  },
+                                                  margin: 5,
+                                                ),
+                                                leftTitles: SideTitles(
+                                                  showTitles: true,
+                                                  getTextStyles: (value) => const TextStyle(
+                                                    color: Color(0xff67727d),
+                                                    fontSize: 11,
+                                                  ),
+                                                  getTitles: (value) {
+                                                    return '${value.toInt()}';
+                                                  },
+                                                  reservedSize: 5,
+                                                  margin: 8,
+                                                ),
+                                              ),
+
+                                              borderData: FlBorderData(
+                                                  show: true,
+                                                  border: Border.all(
+                                                      color: Colors.black,
+                                                      width: 0.5
+                                                  )
+                                              ),
+
+                                              minX: 1,
+                                              maxX: 12,
+                                              minY: 0,
+                                              maxY: maxY.toDouble() + 1,
+
+                                              lineBarsData: [
+                                                LineChartBarData(
+                                                  spots: [
+                                                    for (int x = 0; x < data.data.length; x++)
+                                                      FlSpot(
+                                                          data.data[x].month.toDouble(),
+                                                          data.data[x].bookNumber.toDouble()
+                                                      )
+                                                  ],
+
+                                                  isCurved: true,
+                                                  colors: [Colors.black38],
+                                                  barWidth: 1.5,
+                                                  isStrokeCapRound: true,
+                                                  dotData: FlDotData(
+                                                    show: true,
+                                                  ),
+                                                  belowBarData: BarAreaData(
+                                                    show: true,
+                                                    colors: [Colors.blueAccent, Colors.blue, Colors.teal]
+                                                        .map((color) => color.withOpacity(0.3))
+                                                        .toList(),
+                                                  ),
+                                                ),
+                                              ])
+                                          ),
                                         )
-                                    ),
+                                    )
+                                )
+                              ]);
+                        }
+                      })
+              )
 
-                                    minX: 1,
-                                    maxX: 12,
-                                    minY: 0,
-                                    maxY: maxY.toDouble() + 1,
-
-                                    lineBarsData: [
-                                      LineChartBarData(
-                                        spots: [
-                                          for (int x = 0; x < data.data.length; x++)
-                                            FlSpot(
-                                                data.data[x].month.toDouble(),
-                                                data.data[x].bookNumber.toDouble()
-                                            )
-                                        ],
-
-                                        isCurved: true,
-                                        colors: [Colors.black38],
-                                        barWidth: 1.5,
-                                        isStrokeCapRound: true,
-                                        dotData: FlDotData(
-                                          show: true,
-                                        ),
-                                        belowBarData: BarAreaData(
-                                          show: true,
-                                          colors: [Colors.blueAccent, Colors.blue, Colors.teal]
-                                              .map((color) => color.withOpacity(0.3))
-                                              .toList(),
-                                        ),
-                                      ),
-                                    ])
-                                ),
-                              )
-                          )
-                      )
-                    ]);
-              }
-            })
+            ])
     );
   }
 
