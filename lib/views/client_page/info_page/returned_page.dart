@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:library_frontend/models/reservation.dart';
 import 'package:library_frontend/services/rest_api/reservation_api.dart';
-import 'package:library_frontend/views/initial_view.dart';
 import 'package:library_frontend/widgets/library_alert.dart';
 
 
