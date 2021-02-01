@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:library_frontend/models/book.dart';
 import 'package:library_frontend/services/rest_api/reservation_api.dart';
-import 'package:library_frontend/widgets/my_alert.dart';
+import 'package:library_frontend/widgets/library_alert.dart';
 
 
 class BookDescription extends StatefulWidget {
@@ -162,29 +162,36 @@ class _BookDescriptionState extends State<BookDescription> {
               });
 
               showDialog(
-                  context: context,
-                  builder: (_) => MyAlertDialog(
-                    parent: context,
-                    content: 'Prenotazione effettuata con successo!',
-                  )
+                context: context,
+                builder: (BuildContext context) {
+                  return LibraryAlert(
+                    type: AlertDialogType.SUCCESS,
+                    content: "Prenotazione effettuata con successo!",
+                  );
+                },
               );
 
             } else {
               showDialog(
-                  context: context,
-                  builder: (_) => MyAlertDialog(
-                    parent: context,
-                    content: 'Errore, prenotazione non effettuata!',
-                  )
+                context: context,
+                builder: (BuildContext context) {
+                  return LibraryAlert(
+                    type: AlertDialogType.ERROR,
+                    content: "Errore, prenotazione non effettuata!",
+                  );
+                },
               );
             }
 
           } else {
             showDialog(
-                context: context,
-                builder: (_) => MyAlertDialog(
-                  content: 'Quantita esaurita!',
-                )
+              context: context,
+              builder: (BuildContext context) {
+                return LibraryAlert(
+                  type: AlertDialogType.WARNING,
+                  content: "Libro esaurito!",
+                );
+              },
             );
           }
         },

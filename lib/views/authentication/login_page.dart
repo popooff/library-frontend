@@ -1,7 +1,7 @@
 import 'package:library_frontend/views/authentication/registration_page.dart';
 import 'package:library_frontend/services/rest_api/user_api.dart';
 import 'package:library_frontend/views/initial_view.dart';
-import 'package:library_frontend/widgets/my_alert.dart';
+import 'package:library_frontend/widgets/library_alert.dart';
 import 'package:flutter/material.dart';
 import 'package:blobs/blobs.dart';
 import '../../models/user.dart';
@@ -167,10 +167,13 @@ class _LoginPageState extends State<LoginPage> {
                           });
 
                           showDialog(
-                              context: context,
-                              builder: (_) => MyAlertDialog(
-                                  content: 'Login non riuscito!'
-                              )
+                            context: context,
+                            builder: (BuildContext context) {
+                              return LibraryAlert(
+                                type: AlertDialogType.ERROR,
+                                content: "Login non riuscito!",
+                              );
+                            },
                           );
                         }
 

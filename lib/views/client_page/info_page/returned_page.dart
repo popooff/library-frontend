@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:library_frontend/models/reservation.dart';
 import 'package:library_frontend/services/rest_api/reservation_api.dart';
-import 'package:library_frontend/widgets/my_alert.dart';
+import 'package:library_frontend/widgets/library_alert.dart';
 
 
 class ReturnedPage extends StatefulWidget {
@@ -74,10 +74,13 @@ class _ReturnedPageState extends State<ReturnedPage> {
 
                             } else {
                               showDialog(
-                                  context: context,
-                                  builder: (_) => MyAlertDialog(
-                                      content: 'Problemi con la restituzione del libro!'
-                                  )
+                                context: context,
+                                builder: (BuildContext context) {
+                                  return LibraryAlert(
+                                    type: AlertDialogType.WARNING,
+                                    content: "Problemi con la restituzione del libro!",
+                                  );
+                                },
                               );
                             }
                           },
