@@ -68,7 +68,7 @@ class _LoginPageState extends State<LoginPage> {
             styles: BlobStyles(
               gradient: LinearGradient(
                   colors: [
-                    Colors.red.withOpacity(0.45),
+                    Colors.blueAccent.withOpacity(0.45),
                     Colors.blueAccent.withOpacity(0.25),
                   ]).createShader(Rect.fromLTRB(0, 100, 200, 300)),
             ),
