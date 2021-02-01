@@ -64,7 +64,7 @@ class _RegisterPageState extends State<RegisterPage> {
                 styles: BlobStyles(
                   gradient: LinearGradient(
                       colors: [
-                        Colors.red.withOpacity(0.3),
+                        Colors.blue.withOpacity(0.3),
                         Colors.blueAccent.withOpacity(0.4),
                       ]).createShader(Rect.fromLTRB(0, 100, 200, 300)),
                 ),
