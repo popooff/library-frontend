@@ -24,11 +24,11 @@ class ChartApi extends Utils {
   }
 
 
-  Future<List<Chart>> getAllMonthUserRead() async {
+  Future<List<Chart>> getAllMonthUserRead(int year) async {
     userId = await getUserId();
     token = await getToken();
     var response = await http.get(
-        '$urlServer/grafici/getNumberLibriMese/$userId',
+        '$urlServer/grafici/getNumberLibriMese?utente=$userId&anno=$year',
         headers: authHeader(token)
     );
 
