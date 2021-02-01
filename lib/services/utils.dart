@@ -4,7 +4,7 @@ import 'package:http/http.dart' as http;
 
 class Utils {
 
-  final String urlServer = 'http://g0ptrkwkej5fhqfl.myfritz.net:8090/api';
+  final String urlServer = 'https://g0ptrkwkej5fhqfl.myfritz.net:8090/api';
 
   Map<String, String> authHeader(String token) {
     Map<String, String> map = {
