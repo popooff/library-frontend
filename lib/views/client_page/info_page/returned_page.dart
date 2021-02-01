@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:library_frontend/models/reservation.dart';
 import 'package:library_frontend/services/rest_api/reservation_api.dart';
+import 'package:library_frontend/views/initial_view.dart';
 import 'package:library_frontend/widgets/library_alert.dart';
 
 
@@ -70,7 +71,9 @@ class _ReturnedPageState extends State<ReturnedPage> {
                             bool returned = await reservationApi.returnBook(data[index].idReservation);
 
                             if (returned) {
-                              Navigator.pushNamedAndRemoveUntil(context, '/initial', (route) => false);
+                              setState(() {
+                                data.removeAt(index);
+                              });
 
                             } else {
                               showDialog(
