@@ -1,5 +1,5 @@
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:http/http.dart' as http;
+// import 'package:http/http.dart' as http;
 
 
 class Utils {
@@ -21,8 +21,10 @@ class Utils {
 
 
   Future<bool> isValid() async {
-    String token = await getToken();
+    // String token = await getToken();
     bool valid = await isLog() ?? false;
+
+    /*
     var response = await http.get(
       '$urlServer/authentication/test',
       headers: authHeader(token)
@@ -34,8 +36,9 @@ class Utils {
     } else if (!valid) {
       return true;
     }
+     */
 
-    return false;
+    return !valid;
   }
 
 
