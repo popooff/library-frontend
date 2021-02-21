@@ -16,21 +16,60 @@ class _HomeState extends State<Home> {
 
   BookApi bookApi;
   String token;
+  List<Book> books = [];
+  int start = 0, end = 8;
+  var _controller = ScrollController();
 
   @override
   void initState() {
     bookApi = BookApi();
     getToken();
     super.initState();
+
+    _controller.addListener(() {
+      if (_controller.position.atEdge) {
+
+        if (_controller.position.pixels != 0) {
+          fetchBooks();
+        }
+      }
+    });
   }
 
   void getToken() async {
     String jwt = await bookApi.getToken();
+    var book = await bookApi.getBook(start, end);
 
     setState(() {
       token = jwt;
+      books.addAll(book);
     });
   }
+
+  void fetchBooks() async {
+
+    start += 9;
+    end += 8;
+
+    List<Book> book = await bookApi.getBook(start, end);
+
+    if (book.isNotEmpty) {
+
+      setState(() {
+        books.addAll(book);
+      });
+    }
+
+    start += 9;
+    end += 8;
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -38,53 +77,43 @@ class _HomeState extends State<Home> {
     return Container(
       color: Colors.white,
 
-      child: FutureBuilder(
-          future: bookApi.getBooks(),
-          builder: (context, AsyncSnapshot<List<Book>> data) {
+      child: StaggeredGridView.countBuilder(
+          physics: BouncingScrollPhysics(),
+          crossAxisCount: 4,
+          itemCount:books.length,
+          controller: _controller,
+          itemBuilder: (context, index) {
 
-            if (data.data == null) {
-              return Center(
-                child: CircularProgressIndicator(),
-              );
+            return Card(
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(20),
+                  side: BorderSide(color: Colors.black38)
+              ),
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(20),
+                child: GestureDetector(
 
-            } else {
-              return StaggeredGridView.countBuilder(
-                  physics: BouncingScrollPhysics(),
-                  crossAxisCount: 4,
-                  itemCount: data.data.length ?? 0,
-                  itemBuilder: (context, index) {
+                  child: Image(image: CachedNetworkImageProvider(
+                    "${bookApi.urlServer}/download/${books[index].cover}",
+                    headers:bookApi.authHeader(token),
+                  )
+                  ),
 
-                    return Card(
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(20),
-                        side: BorderSide(color: Colors.black38)
-                      ),
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(20),
-                        child: GestureDetector(
+                  onTap: () {
+                    Navigator.of(context).push(
+                        MaterialPageRoute(
+                            builder: (BuildContext context) {
+                              return BookDescription(book: books[index]);
+                            })
+                    );},
+                ),
+              ),
+            );
+          },
 
-                          child: Image(image: CachedNetworkImageProvider(
-                              "${bookApi.urlServer}/download/${data.data[index].cover}",
-                             headers:bookApi.authHeader(token),
-                             )
-                          ),
+          staggeredTileBuilder: (int index) => StaggeredTile.fit(2)
+      ),
 
-                          onTap: () {
-                            Navigator.of(context).push(
-                                MaterialPageRoute(
-                                    builder: (BuildContext context) {
-                                      return BookDescription(book: data.data[index]);
-                                    })
-                            );},
-                        ),
-                      ),
-                    );
-                  },
-
-                  staggeredTileBuilder: (int index) => StaggeredTile.fit(2)
-              );
-            }
-          }),
     );
 
   }
