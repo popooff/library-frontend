@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:library_frontend/models/chart.dart';
@@ -601,9 +602,10 @@ class _BooksReservedReturnedState extends State<BooksReservedReturned> {
                                   child: Container(
                                       child: ClipRRect(
                                         borderRadius: BorderRadius.circular(5),
-                                        child: Image.network(
+                                        child: Image(image: CachedNetworkImageProvider(
                                           '${reservationApi.urlServer}/download/${data.data[index].book.cover}',
-                                          headers: reservationApi.authHeader(token),
+                                          headers:reservationApi.authHeader(token),
+                                        ),
                                         ),
                                       )
                                   ),

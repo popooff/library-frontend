@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:library_frontend/models/reservation.dart';
 import 'package:library_frontend/services/rest_api/reservation_api.dart';
@@ -55,9 +56,9 @@ class _ReturnedPageState extends State<ReturnedPage> {
                         subtitle: Text('${data[index].book.kind.toString()}'),
                         leading: CircleAvatar(
                           radius: 30,
-                          backgroundImage: NetworkImage(
-                              '${reservationApi.urlServer}/download/${data[index].book.cover}',
-                              headers: reservationApi.authHeader(token)
+                          backgroundImage: CachedNetworkImageProvider(
+                            '${reservationApi.urlServer}/download/${data[index].book.cover}',
+                            headers:reservationApi.authHeader(token),
                           ),
                         )
                       ),

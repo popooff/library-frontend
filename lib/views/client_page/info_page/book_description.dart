@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:library_frontend/models/book.dart';
 import 'package:library_frontend/services/rest_api/reservation_api.dart';
@@ -54,9 +55,10 @@ class _BookDescriptionState extends State<BookDescription> {
             flexibleSpace: FlexibleSpaceBar(
               background: ClipRRect(
                 borderRadius: BorderRadius.vertical(bottom: Radius.circular(40)),
-                child: Image.network(
-                  '${reservationApi.urlServer}/download/${widget.book.cover}',
-                  headers: reservationApi.authHeader(token),
+                child: Image(image: CachedNetworkImageProvider(
+                  "${reservationApi.urlServer}/download/${widget.book.cover}",
+                  headers:reservationApi.authHeader(token),
+                ),
                   fit: BoxFit.cover,
                 ),
               ),

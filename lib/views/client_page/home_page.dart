@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:library_frontend/models/book.dart';
 import 'package:library_frontend/services/rest_api/book_api.dart';
@@ -61,9 +62,11 @@ class _HomeState extends State<Home> {
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(20),
                         child: GestureDetector(
-                          child: Image.network(
-                            '${bookApi.urlServer}/download/${data.data[index].cover}',
-                            headers: bookApi.authHeader(token),
+
+                          child: Image(image: CachedNetworkImageProvider(
+                              "${bookApi.urlServer}/download/${data.data[index].cover}",
+                             headers:bookApi.authHeader(token),
+                             )
                           ),
 
                           onTap: () {
