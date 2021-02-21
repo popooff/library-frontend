@@ -32,4 +32,17 @@ class BookApi extends Utils {
     return Book.fromJson(jsonDecode(response.body)['data'][0][0]);
   }
 
+
+  Future<List<Book>> getBook(int start, int end) async {
+    token = await getToken();
+    var response = await http.get(
+        '$urlServer/libri/getAll2?limit1=$start&limit2=$end',
+        headers: authHeader(token)
+    );
+
+    return List.from(jsonDecode(response.body)['data'][0])
+        .map((e) => Book.fromJson(e))
+        .toList();
+  }
+
 }
