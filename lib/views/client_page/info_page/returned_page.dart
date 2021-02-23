@@ -1,8 +1,9 @@
-import 'package:cached_network_image/cached_network_image.dart';
-import 'package:flutter/material.dart';
-import 'package:library_frontend/models/reservation.dart';
+import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:library_frontend/services/rest_api/reservation_api.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:library_frontend/widgets/library_alert.dart';
+import 'package:library_frontend/models/reservation.dart';
+import 'package:flutter/material.dart';
 
 
 class ReturnedPage extends StatefulWidget {
@@ -31,73 +32,117 @@ class _ReturnedPageState extends State<ReturnedPage> {
     });
   }
 
+
   @override
   Widget build(BuildContext context) {
 
     final List<Reservation> data = ModalRoute.of(context).settings.arguments;
 
     return Scaffold(
+      backgroundColor: Colors.white,
+      appBar: AppBar(
+        title: Text('Restituire', style: TextStyle(color: Colors.white)),
+        backgroundColor: Colors.blueGrey.withOpacity(0.35),
+        shape: RoundedRectangleBorder(
+          side: BorderSide(color: Colors.black38),
+          borderRadius: BorderRadius.only(bottomRight: Radius.circular(50))
+        ),
+        iconTheme: IconThemeData(color: Colors.white),
+      ),
+
       body: SafeArea(
-          child: ListView.builder(
-              physics: BouncingScrollPhysics(),
-              itemCount: (data == null) ? 0 : data.length,
-              itemBuilder: (context, index) {
+        child: StaggeredGridView.countBuilder(
+            physics: BouncingScrollPhysics(),
+            crossAxisCount: 4,
+            itemCount:data == null ? 0 : data.length,
+            itemBuilder: (context, index) {
 
-                return Card(
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(15),
-                      side: BorderSide(color: Colors.black38)
+              return Stack(
+                children: [
+
+                  Card(
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
+                        side: BorderSide(color: Colors.black38)
+                    ),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(10),
+                      child: Image(
+                          image: CachedNetworkImageProvider(
+                            '${reservationApi.urlServer}/download/${data[index].book.cover}',
+                            headers: reservationApi.authHeader(token),
+                          )
+                      ),
+
+                    ),
                   ),
-                  child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.end,
-                      children: [
-                        ListTile(
-                            title: Text('${data[index].book.title.toString()}'),
-                            subtitle: Text('${data[index].book.kind.toString()}'),
-                            leading: CircleAvatar(
-                              radius: 30,
-                              backgroundImage: CachedNetworkImageProvider(
-                                '${reservationApi.urlServer}/download/${data[index].book.cover}',
-                                headers:reservationApi.authHeader(token),
-                              ),
-                            )
-                        ),
 
-                        Padding(
-                          padding: EdgeInsets.only(right: 5),
-                          child: FlatButton(
+                  Positioned(
+                    bottom: 5,
+                    right: 10,
+                    child: FlatButton(
 
-                            onPressed: () async {
-                              bool returned = await reservationApi.returnBook(data[index].idReservation);
+                      onPressed: () async {
 
-                              if (returned) {
-                                setState(() {
-                                  data.removeAt(index);
-                                });
+                        setState(() => data[index].loading = true);
+                        bool returned = await reservationApi.returnBook(data[index].idReservation);
 
-                              } else {
-                                showDialog(
-                                  context: context,
-                                  builder: (BuildContext context) {
-                                    return LibraryAlert(
-                                      type: AlertDialogType.WARNING,
-                                      content: "Problemi con la restituzione del libro!",
-                                    );
-                                  },
-                                );
-                              }
+                        if (returned) {
+                          setState(() {
+                            data[index].loading = false;
+                            data[index].returned = returned;
+                          });
+
+                          await Future.delayed(Duration(seconds: 1));
+
+                          showDialog(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return LibraryAlert(
+                                type: AlertDialogType.SUCCESS,
+                                content: "Restituzione avvenuta!",
+                              );
                             },
+                          );
 
-                            child: Text('Restituisci', style: TextStyle(color: Colors.black54),),
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(10),
-                                side: BorderSide(color: Colors.black.withOpacity(0.5))
-                            ),
-                          ),
-                        )
-                      ]),
-                );
-              })
+                        } else {
+
+                          setState(() {
+                            data[index].loading = false;
+                          });
+
+                          showDialog(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return LibraryAlert(
+                                type: AlertDialogType.WARNING,
+                                content: "Problemi con la restituzione del libro!",
+                              );
+                            },
+                          );
+                        }
+                      },
+
+                      child: data[index].loading ? SizedBox(
+                          height: 20,
+                          width: 20,
+                          child: CircularProgressIndicator(
+                            valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                          )) : data[index].returned ? Icon(Icons.check, color: Colors.green) : Text('Restituisci', style: TextStyle(color: Colors.black87)),
+
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(5),
+                          side: BorderSide(color: Colors.black87)
+                      ),
+                    ),
+                  )
+
+                ],
+              );
+            },
+
+            staggeredTileBuilder: (int index) => StaggeredTile.fit(2)
+        ),
       ),
     );
   }

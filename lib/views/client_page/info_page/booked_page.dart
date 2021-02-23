@@ -41,6 +41,17 @@ class _BookedPageState extends State<BookedPage> {
     ];
 
     return Scaffold(
+      backgroundColor: Colors.white,
+      appBar: AppBar(
+        title: Text('Prenotati', style: TextStyle(color: Colors.white)),
+        backgroundColor: Colors.blueGrey.withOpacity(0.35),
+        shape: RoundedRectangleBorder(
+            side: BorderSide(color: Colors.black38),
+            borderRadius: BorderRadius.only(bottomRight: Radius.circular(50))
+        ),
+        iconTheme: IconThemeData(color: Colors.white),
+      ),
+
       body: SafeArea(
           child: ListView.builder(
               physics: BouncingScrollPhysics(),
