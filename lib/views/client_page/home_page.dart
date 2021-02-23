@@ -19,6 +19,7 @@ class _HomeState extends State<Home> {
   List<Book> books = [];
   int start = 0, end = 8;
   var _controller = ScrollController();
+  bool isLoad = false;
 
   @override
   void initState() {
@@ -50,6 +51,7 @@ class _HomeState extends State<Home> {
 
     start += 9;
     end += 8;
+    setState(() => isLoad = true);
 
     List<Book> book = await bookApi.getBook(start, end);
 
@@ -62,6 +64,7 @@ class _HomeState extends State<Home> {
 
     start += 9;
     end += 8;
+    setState(() => isLoad = false);
   }
 
   @override
@@ -77,41 +80,62 @@ class _HomeState extends State<Home> {
     return Container(
       color: Colors.white,
 
-      child: StaggeredGridView.countBuilder(
-          physics: BouncingScrollPhysics(),
-          crossAxisCount: 4,
-          itemCount:books.length,
-          controller: _controller,
-          itemBuilder: (context, index) {
+      child: Column(
+        children: [
 
-            return Card(
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(20),
-                  side: BorderSide(color: Colors.black38)
+          Expanded(
+            child: StaggeredGridView.countBuilder(
+                physics: BouncingScrollPhysics(),
+                crossAxisCount: 4,
+                itemCount:books.length,
+                controller: _controller,
+                itemBuilder: (context, index) {
+
+                  return Card(
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(20),
+                        side: BorderSide(color: Colors.black38)
+                    ),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(20),
+                      child: GestureDetector(
+
+                        child: Image(image: CachedNetworkImageProvider(
+                          "${bookApi.urlServer}/download/${books[index].cover}",
+                          headers:bookApi.authHeader(token),
+                        )
+                        ),
+
+                        onTap: () {
+                          Navigator.of(context).push(
+                              MaterialPageRoute(
+                                  builder: (BuildContext context) {
+                                    return BookDescription(book: books[index]);
+                                  })
+                          );},
+                      ),
+                    ),
+                  );
+                },
+
+                staggeredTileBuilder: (int index) => StaggeredTile.fit(2)
+            ),
+          ),
+
+          isLoad ? Column(
+            children: [
+              Center(
+                child: CircularProgressIndicator(),
               ),
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(20),
-                child: GestureDetector(
 
-                  child: Image(image: CachedNetworkImageProvider(
-                    "${bookApi.urlServer}/download/${books[index].cover}",
-                    headers:bookApi.authHeader(token),
-                  )
-                  ),
+              SizedBox(
+                height: 30,
+              )
+            ],
+          ) : SizedBox(),
 
-                  onTap: () {
-                    Navigator.of(context).push(
-                        MaterialPageRoute(
-                            builder: (BuildContext context) {
-                              return BookDescription(book: books[index]);
-                            })
-                    );},
-                ),
-              ),
-            );
-          },
 
-          staggeredTileBuilder: (int index) => StaggeredTile.fit(2)
+        ],
       ),
 
     );
