@@ -10,6 +10,10 @@ class Reservation {
   final DateTime dateReservation;
   final DateTime dateReturned;
 
+  bool returned = false;
+  bool loading = false;
+
+
   // Usata solo per inglobare le date per la pagina dei libri prenotati.
   final List<DateTime> bookedDatesForTheSameBook;
 
