@@ -92,14 +92,27 @@ class _BookedPageState extends State<BookedPage> {
                     ),
 
                     children: [
+
                       Container(
-                        child: Text("Libro prenotato il: ${data[index].bookedDatesForTheSameBook.map((e) => e.toString().split(' ')[0]).toString()}",
+                        child: Text("Libro prenotato nelle date:",
                             style: TextStyle(
-                                fontSize: 16,
-                                color: Colors.black.withOpacity(0.70)
+                                fontSize: 18,
+                                fontWeight: FontWeight.w400,
+                                color: Colors.black.withOpacity(0.75)
                             )
                         ),
-                      )
+                      ),
+
+                      Container(
+                        child: Text(data[index].getBookedDates(),
+                            style: TextStyle(
+                                fontSize: 17,
+                                fontWeight: FontWeight.w500,
+                                color: Colors.black.withOpacity(0.75)
+                            )
+                        ),
+                      ),
+
                     ]),
                 );
               })
