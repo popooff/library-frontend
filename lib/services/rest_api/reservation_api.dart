@@ -1,13 +1,12 @@
 import 'package:library_frontend/models/reservation.dart';
 import 'package:library_frontend/services/utils.dart';
+import 'package:library_frontend/models/book.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-import 'book_api.dart';
 
 
 class ReservationApi extends Utils {
 
-  BookApi bookApi = BookApi();
   Reservation reservation;
   int idUser;
   String token;
@@ -59,11 +58,9 @@ class ReservationApi extends Utils {
     List<Reservation> list = [];
     for (var el in jsonDecode(response.body)['data'][0]) {
 
-      var book = await bookApi.getBookById(el['ID']);
-
       list.add(
           Reservation(
-              book: book,
+              book: Book.reserved(el),
               bookedDatesForTheSameBook: el['Prenotazioni']
                   .toString()
                   .split(',')
@@ -88,13 +85,10 @@ class ReservationApi extends Utils {
     List<Reservation> list = [];
     for (var el in jsonDecode(response.body)['data'][0]) {
 
-      var book = await bookApi.getBookById(el['Libro']);
-
       list.add(
         Reservation(
-          book: book,
+          book: Book.toReturn(el),
           idReservation: el['ID'],
-          dateReservation: DateTime.parse(el['DataPrenotazione'].toString().substring(0, 10))
         )
       );
     }
