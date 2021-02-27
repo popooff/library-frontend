@@ -32,6 +32,20 @@ class Book {
     );
   }
 
+  factory Book.toReturn(Map<String, dynamic> json) {
+    return Book(
+      cover: json['Copertina'],
+    );
+  }
+
+  factory Book.reserved(Map<String, dynamic> json) {
+    return Book(
+      title: json['Titolo'],
+      author: json['Autori'].toString().split(',').toList(),
+      cover: json['Copertina'],
+    );
+  }
+
   String getAuthors() {
     return author.join(', ');
   }
