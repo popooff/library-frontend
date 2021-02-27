@@ -38,4 +38,13 @@ class Reservation {
     'dataRestituzione': dateReturned.toString()
   };
 
+
+  String getBookedDates() {
+    String dates = '';
+    bookedDatesForTheSameBook.forEach((element) {
+      dates += '- ${element.toString().substring(0, 10)}\n';
+    });
+
+    return dates;
+  }
 }
