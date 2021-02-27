@@ -45,4 +45,17 @@ class BookApi extends Utils {
         .toList();
   }
 
+
+  Future<List<Book>> searchBooks(String query) async {
+    token = await getToken();
+    var response = await http.get(
+        '$urlServer/libri/cercaLibro/$query',
+        headers: authHeader(token)
+    );
+
+    return List.from(jsonDecode(response.body)['data'][0])
+        .map((e) => Book.fromJson(e))
+        .toList();
+  }
+
 }

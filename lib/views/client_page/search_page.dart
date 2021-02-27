@@ -14,25 +14,16 @@ class _SearchState extends State<Search> {
 
   var searching;
   BookApi bookApi;
-  List<Book> officialBooks = [];
-  List<Book> booksForFilter = [];
+  var booksForFilter = [];
 
 
   @override
   void initState() {
     searching = TextEditingController();
     bookApi = BookApi();
-    getBooks();
     super.initState();
   }
 
-  void getBooks() async {
-    List<Book> _books = await bookApi.getBooks() ?? [];
-
-    setState(() {
-      officialBooks = _books;
-    });
-  }
 
   @override
   void dispose() {
@@ -56,13 +47,15 @@ class _SearchState extends State<Search> {
                         border: OutlineInputBorder(),
                         suffixIcon: Icon(Icons.search)
                     ),
-                    onChanged: (value) {
-                      setState(() {
-                        booksForFilter = officialBooks.where((element) =>
-                          (element.title.toLowerCase().contains(value.toLowerCase())
-                              || element.author.toString().toLowerCase().contains(value.toLowerCase()))
-                        ).toList();
-                      });
+                    onChanged: (value) async {
+
+                      if (value.length >= 1) {
+                        List<Book> books = await bookApi.searchBooks(value);
+
+                        setState(() {
+                          booksForFilter = books;
+                        });
+                      }
                     },
                   ),
                 ),
@@ -99,7 +92,9 @@ class _SearchState extends State<Search> {
                             onTap: () {
                               Navigator.push(
                                   context,
-                                  MaterialPageRoute(builder: (_) => BookDescription(book: booksForFilter[index]))
+                                  MaterialPageRoute(
+                                      builder: (_) => BookDescription(book: booksForFilter[index])
+                                  )
                               );
                             },
                           ),
