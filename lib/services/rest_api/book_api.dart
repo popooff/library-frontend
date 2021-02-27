@@ -22,17 +22,6 @@ class BookApi extends Utils {
   }
 
 
-  Future<Book> getBookById(int id) async {
-    token = await getToken();
-    var response = await http.get(
-        '$urlServer/libri/getBook/$id',
-        headers: authHeader(token)
-    );
-
-    return Book.fromJson(jsonDecode(response.body)['data'][0][0]);
-  }
-
-
   Future<List<Book>> getBook(int start, int end) async {
     token = await getToken();
     var response = await http.get(
