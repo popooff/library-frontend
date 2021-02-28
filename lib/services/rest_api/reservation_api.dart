@@ -27,7 +27,7 @@ class ReservationApi extends Utils {
         body: reservation.bookedJson()
     );
 
-    return (response.statusCode == 200) ? true : false;
+    return response.statusCode == 200;
   }
 
 
@@ -43,7 +43,7 @@ class ReservationApi extends Utils {
         body: reservation.returnedJson()
     );
 
-    return (response.statusCode == 200) ? true : false;
+    return response.statusCode == 200;
   }
 
 
@@ -55,22 +55,16 @@ class ReservationApi extends Utils {
         headers: authHeader(token)
     );
 
-    List<Reservation> list = [];
-    for (var el in jsonDecode(response.body)['data'][0]) {
-
-      list.add(
-          Reservation(
-              book: Book.reserved(el),
-              bookedDatesForTheSameBook: el['Prenotazioni']
-                  .toString()
-                  .split(',')
-                  .map((e) => DateTime.parse(e))
-                  .toList()
-          )
-      );
-    }
-
-    return list;
+    return List.from(jsonDecode(response.body)['data'][0]).map((el) =>
+        Reservation(
+            book: Book.reserved(el),
+            bookedDatesForTheSameBook: el['Prenotazioni']
+                .toString()
+                .split(',')
+                .map((e) => DateTime.parse(e))
+                .toList()
+        )
+    ).toList();
   }
 
 
@@ -82,18 +76,12 @@ class ReservationApi extends Utils {
         headers: authHeader(token)
     );
 
-    List<Reservation> list = [];
-    for (var el in jsonDecode(response.body)['data'][0]) {
-
-      list.add(
+    return List.from(jsonDecode(response.body)['data'][0]).map((el) =>
         Reservation(
           book: Book.toReturn(el),
           idReservation: el['ID'],
         )
-      );
-    }
-
-    return list;
+    ).toList();
   }
 
 }

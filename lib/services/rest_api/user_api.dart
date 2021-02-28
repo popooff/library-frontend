@@ -37,7 +37,7 @@ class UserApi extends Utils {
         body: user.registrationJson()
     );
 
-    return (response.statusCode == 201) ? true : false;
+    return response.statusCode == 201;
   }
 
 
