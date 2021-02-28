@@ -41,7 +41,7 @@ class Book {
   factory Book.reserved(Map<String, dynamic> json) {
     return Book(
       title: json['Titolo'],
-      author: json['Autori'].toString().split(',').toList(),
+      kind: json['Genere'],
       cover: json['Copertina'],
     );
   }
